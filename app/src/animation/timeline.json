@@ -5,27 +5,27 @@
     {
       "id": "describe",
       "label": "Describe",
-      "title": "Describe the app you want, and Synthase, the agent in the molecule.dev IDE, assembles a real TypeScript project from the open-source @molecule catalog."
+      "title": "Describe the app in the molecule.dev IDE, the mlcl CLI or any MCP agent, and Synthase assembles it from the open-source @molecule catalog."
     },
     {
       "id": "bonds",
       "label": "Bonds",
-      "title": "Every capability sits behind a core interface with swappable provider bonds, so changing the database means changing one import, never the application code."
+      "title": "Every provider sits behind a swappable bond, so changing the database is one import, not a rewrite."
     },
     {
       "id": "built-in",
       "label": "Built in",
-      "title": "Auth, payments, i18n, analytics, monitoring, tests and CI ship wired on day one, so the integrations every real app needs are never rebuilt from scratch."
+      "title": "Auth, payments, i18n, analytics, monitoring, tests and CI come wired in from day one."
     },
     {
       "id": "feedback",
       "label": "Feedback loop",
-      "title": "Every app ships with analytics, error tracking and feedback built in, and the AI uses what real users do to improve it, ship the change and measure again."
+      "title": "Built-in analytics, error tracking and feedback let the AI keep improving the app from real use."
     },
     {
       "id": "outcomes",
       "label": "Outcomes",
-      "title": "The result is a faster, cheaper, higher-quality full-stack app for web, mobile and API that stays easy to maintain and scale, because every provider is swappable."
+      "title": "Faster, cheaper, higher-quality apps for web, mobile and API that stay easy to change."
     }
   ]
 }
