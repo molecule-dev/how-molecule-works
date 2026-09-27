@@ -13,6 +13,7 @@
  * through the UI first.
  */
 import './bonds.js'
+
 import { expect, test } from '@molecule/app-e2e-fixtures-default'
 
 test('the home page renders visible content', async ({ page }) => {

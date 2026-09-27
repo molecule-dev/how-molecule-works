@@ -1,14 +1,21 @@
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 
 import { useTranslation } from '@molecule/app-react'
 import { getClassMap } from '@molecule/app-ui'
 
-import { MOLECULE_REPO_URL, WEBSITE_URL } from '../branding.js'
+import { MOLECULE_REPO_URL } from '../branding.js'
+import { ThemeToggle } from './ThemeToggle.js'
 
-/** Site footer: where the parts live, and the About link. */
+/**
+ * The one line of site chrome: copyright, the repo, About (or the way back
+ * from it) and the theme toggle. molecule.dev itself is linked from the
+ * artwork, so it is not repeated here.
+ */
 export function Footer() {
   const cm = getClassMap()
   const { t } = useTranslation()
+  const { pathname } = useLocation()
+  const onAbout = pathname.startsWith('/about')
   const year = new Date().getFullYear()
   return (
     <footer className={cm.footerBar} data-mol-id="site-footer">
@@ -27,15 +34,6 @@ export function Footer() {
         >
           <a
             className={cm.link}
-            href={WEBSITE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-mol-id="footer-site"
-          >
-            molecule.dev
-          </a>
-          <a
-            className={cm.link}
             href={MOLECULE_REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
@@ -43,9 +41,16 @@ export function Footer() {
           >
             GitHub
           </a>
-          <Link className={cm.link} to="/about/" data-mol-id="footer-about">
-            {t('footer.aboutSite', undefined, { defaultValue: 'About this site' })}
-          </Link>
+          {onAbout ? (
+            <Link className={cm.link} to="/" data-mol-id="footer-home">
+              {t('footer.slides', undefined, { defaultValue: 'Slides' })}
+            </Link>
+          ) : (
+            <Link className={cm.link} to="/about/" data-mol-id="footer-about">
+              {t('footer.aboutSite', undefined, { defaultValue: 'About this site' })}
+            </Link>
+          )}
+          <ThemeToggle />
         </nav>
       </div>
     </footer>

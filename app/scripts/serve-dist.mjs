@@ -14,6 +14,7 @@ import { createReadStream, existsSync, statSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { extname, join, normalize } from 'node:path'
 import process from 'node:process'
+import { URL } from 'node:url'
 
 const port = Number(process.argv[2] ?? 4173)
 const root = new URL('../dist/', import.meta.url).pathname

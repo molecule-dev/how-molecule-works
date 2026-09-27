@@ -362,10 +362,10 @@ function build(theme, slide = null) {
     const y = 662
     if (SLIDE) {
       const chev = (x, d, nav) =>
-        `<g data-nav="${nav}"><rect x="${x - 12}" y="${y - 14}" width="36" height="44" fill="transparent"/><path d="${d}" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>`
+        `<g data-nav="${nav}"><rect x="${x - 12}" y="${y + 2}" width="36" height="36" fill="transparent"/><path d="${d}" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>`
       footer +=
-        chev(60, `M${72} ${y - 2} l-7 7 l7 7`, 'prev') +
-        chev(1116, `M${1128} ${y - 2} l7 7 l-7 7`, 'next')
+        chev(60, `M${72} ${y + 13} l-7 7 l7 7`, 'prev') +
+        chev(1116, `M${1128} ${y + 13} l7 7 l-7 7`, 'next')
     }
     SCENES.forEach((label, i) => {
       const x = 100 + i * (segW + 20)
@@ -840,24 +840,6 @@ function build(theme, slide = null) {
       ['03', 'Higher quality', 'Type-checked, linted and tested before it reaches you.'],
       ['04', 'Easier to maintain\n& scale', 'Change a bond, not the app.'],
     ]
-    const CARD_INFO = [
-      [
-        'Templates: blog, CRM, store, helpdesk… 150 complete apps to start from.',
-        'https://www.molecule.dev/templates',
-      ],
-      [
-        'Packages do not burn tokens: the AI wires them, it never rewrites them.',
-        'https://www.molecule.dev/packages',
-      ],
-      [
-        'Type-check, lint and tests run before handoff, and the tests ship with your project.',
-        null,
-      ],
-      [
-        'One bond swap moves a provider or a framework; the application code stays put.',
-        'https://github.com/molecule-dev/molecule#the-bond-system',
-      ],
-    ]
     const cw = 258
     const chh = 200
     cards.forEach(([num, title, body], i) => {
@@ -869,7 +851,7 @@ function build(theme, slide = null) {
         fadeOut: 0.3,
       })
       // `.m-step`: 16px radius, step number in primary with 0.1em tracking, 19px/600 title.
-      scene5 += `<g ${A(k)}${hov({ href: CARD_INFO[i][1] ?? undefined })}>${card(x, y, cw, chh, { rx: 16 })}${txt(x + 24, y + 38, num, { size: 14, weight: 700, tracking: 0.1, color: C.primary }).svg}`
+      scene5 += `<g ${A(k)}>${card(x, y, cw, chh, { rx: 16 })}${txt(x + 24, y + 38, num, { size: 14, weight: 700, tracking: 0.1, color: C.primary }).svg}`
       const titleLines = title.split('\n')
       titleLines.forEach((t, ti) => {
         scene5 += txt(x + 24, y + 72 + ti * 24, t, { size: 19, weight: 600, color: C.strong }).svg
@@ -884,19 +866,11 @@ function build(theme, slide = null) {
     const py = 444
     scene5 += `<g ${A(platK)}>${eyebrow(60, py, 'Cross-platform from one codebase')}`
     const plats = [
-      [
-        'Web',
-        'React · Vue · Svelte · Solid · Angular',
-        'Five framework bindings over the same interfaces; the styling layer is a swappable ClassMap.',
-      ],
-      [
-        'Mobile',
-        'React Native + native device bonds',
-        'Camera, biometrics, push, geolocation and more as native bonds.',
-      ],
-      ['API', 'Any framework, database or host', 'A conventional API you can run anywhere.'],
+      ['Web', 'React · Vue · Svelte · Solid · Angular'],
+      ['Mobile', 'React Native + native device bonds'],
+      ['API', 'Any framework, database or host'],
     ]
-    plats.forEach(([t, sub, info], i) => {
+    plats.forEach(([t, sub], i) => {
       const x = 60 + i * 366
       scene5 += `<g>${card(x, py + 14, 350, 62, { rx: 12 })}<circle cx="${x + 20}" cy="${py + 45}" r="4" fill="${accent(i)}"/>${txt(x + 36, py + 40, t, { size: 14.5, weight: 600, color: C.strong }).svg}${txt(x + 36, py + 61, sub, { size: 13.5, color: C.gray }).svg}</g>`
     })

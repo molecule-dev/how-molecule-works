@@ -58,26 +58,28 @@ const STAGE_CSS = `
 /**
  * One slide, inlined. A memoized leaf keyed by slide + theme by its parent:
  * mounting it inserts the SVG and its entrance animations start; nothing the
- * deck does afterwards touches this element except its state class.
+ * deck does afterwards touches this element. React re-applies
+ * `dangerouslySetInnerHTML` whenever it is handed a NEW object, which would
+ * reinsert the SVG (restarting every animation and dropping the links the
+ * deck made real), so the object itself is memoized by the parent and no
+ * other prop changes while a slide is up.
  */
 const Slide = memo(function Slide({
-  markup,
+  html,
   stageRef,
   enter,
-  state,
 }: {
-  markup: string
+  html: { __html: string }
   stageRef: React.RefObject<HTMLDivElement | null>
   enter: 'next' | 'prev'
-  state: string
 }) {
   return (
     <div
       ref={stageRef}
-      className={`hmw-stage hmw-enter-${enter} ${state}`}
+      className={`hmw-stage hmw-enter-${enter}`}
       data-mol-id="slide-stage"
       style={{ lineHeight: 0 }}
-      dangerouslySetInnerHTML={{ __html: markup }}
+      dangerouslySetInnerHTML={html}
     />
   )
 })
@@ -107,7 +109,7 @@ export function Slideshow() {
   const frameRef = useRef<HTMLDivElement>(null)
   const touchStart = useRef<{ x: number; y: number } | null>(null)
 
-  const markup = useMemo(() => prepareSlideSvg(SLIDES[theme][index]), [theme, index])
+  const html = useMemo(() => ({ __html: prepareSlideSvg(SLIDES[theme][index]) }), [theme, index])
 
   const go = useCallback(
     (to: number, byVisitor = true) => {
@@ -204,7 +206,7 @@ export function Slideshow() {
       stage.removeEventListener('pointermove', onMove)
       stage.removeEventListener('pointerleave', onLeave)
     }
-  }, [markup, go, index])
+  }, [html, go, index])
 
   // Keys: arrows, digits, Home/End — unless something editable has focus.
   useEffect(() => {
@@ -291,6 +293,7 @@ export function Slideshow() {
           if (window.matchMedia('(hover: hover)').matches) setPaused(true)
         }}
         onMouseLeave={() => setPaused(false)}
+        className={!auto ? 'hmw-stopped' : paused ? 'hmw-paused' : undefined}
         style={{
           position: 'relative',
           touchAction: 'pan-y',
@@ -298,13 +301,7 @@ export function Slideshow() {
           boxShadow: '0 30px 80px -40px rgba(0,0,0,.6)',
         }}
       >
-        <Slide
-          key={`${theme}-${index}`}
-          markup={markup}
-          stageRef={stageRef}
-          enter={enter}
-          state={!auto ? 'hmw-stopped' : paused ? 'hmw-paused' : ''}
-        />
+        <Slide key={`${theme}-${index}`} html={html} stageRef={stageRef} enter={enter} />
 
         {tip ? (
           <div

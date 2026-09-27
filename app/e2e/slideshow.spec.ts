@@ -5,6 +5,7 @@
  * the theme follows the OS and the toggle swaps the variant.
  */
 import './bonds.js'
+
 import { expect, test } from '@molecule/app-e2e-fixtures-default'
 
 const deck = '[data-mol-id="slideshow"]'
@@ -40,6 +41,28 @@ test('resting the pointer on the stage pauses autoplay', async ({ page }) => {
   await expect(page.locator(deck)).toHaveAttribute('data-autoplay', 'paused')
   await page.mouse.move(640, 1000)
   await expect(page.locator(deck)).toHaveAttribute('data-autoplay', 'on')
+})
+
+test('hovering the artwork never restarts it, and its links survive the hover', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await expect(page.locator(`${stage} svg`)).toBeVisible()
+  await page.waitForTimeout(1500)
+  const clock = () =>
+    page.evaluate(() => {
+      const el = document.querySelector('[data-mol-id="slide-stage"]') as HTMLElement
+      return Math.max(...el.getAnimations({ subtree: true }).map((a) => Number(a.currentTime) || 0))
+    })
+  const before = await clock()
+  await page.locator(stage).hover({ position: { x: 600, y: 300 } })
+  await page.waitForTimeout(500)
+  await page.mouse.move(640, 320)
+  await page.waitForTimeout(500)
+  // A reinserted SVG would start its clocks over; a live one keeps counting.
+  expect(await clock()).toBeGreaterThan(before)
+  await expect(page.locator(`${stage} a[href*="/packages/"]`).first()).toBeAttached()
+  await expect(page.locator(`${stage} g[data-href]`)).toHaveCount(0)
 })
 
 test('the index row inside the graphic navigates: segments and chevrons', async ({ page }) => {
