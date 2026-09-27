@@ -168,13 +168,21 @@ export function Slideshow() {
     const stage = stageRef.current
     const frame = frameRef.current
     if (!stage || !frame) return
+    for (const g of Array.from(stage.querySelectorAll<SVGElement>('g[data-href]'))) {
+      const a = document.createElementNS('http://www.w3.org/2000/svg', 'a')
+      for (const at of Array.from(g.attributes)) a.setAttribute(at.name, at.value)
+      a.setAttribute('href', g.dataset.href ?? '')
+      a.setAttribute('target', '_blank')
+      a.setAttribute('rel', 'noopener noreferrer')
+      while (g.firstChild) a.appendChild(g.firstChild)
+      g.replaceWith(a)
+    }
     const onClick = (e: Event) => {
-      const target = (e.target as Element).closest('[data-scene],[data-href],[data-nav]')
+      const target = (e.target as Element).closest('[data-scene],[data-nav]')
       if (!target) return
-      const { scene, nav, href } = (target as HTMLElement).dataset
+      const { scene, nav } = (target as HTMLElement).dataset
       if (nav) go(index + (nav === 'next' ? 1 : -1))
       else if (scene !== undefined) go(Number(scene))
-      else if (href) window.open(href, '_blank', 'noopener,noreferrer')
     }
     const onMove = (e: PointerEvent) => {
       const target = (e.target as Element).closest('[data-info]') as HTMLElement | null
