@@ -526,7 +526,7 @@ function build(theme, slide = null) {
             : `0%{${hidden}}${q(a)}%{${hidden}}${q(a + 0.35)}%{${shown}}${q(a + slot - 0.25)}%{${shown}}${q(a + slot)}%{${hidden}}100%{${hidden}}`
         keyframes.push(`@keyframes ${k}{${frames}}`)
         keyframes.push(
-          `.${k}{animation:${k} ${period}s linear ${(t0 - base).toFixed(2)}s infinite backwards}`,
+          `.${k}{animation:${k} ${period}s linear ${(s + 1 - base).toFixed(2)}s infinite backwards}`,
         )
       } else {
         k = show(t0, t1, { from: 'translateX(48px)', fadeIn: 0.35, fadeOut: 0.25 })

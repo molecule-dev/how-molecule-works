@@ -320,11 +320,11 @@
   @keyframes cy30{0%{opacity:1;visibility:visible;transform:none}19.792%{opacity:1;visibility:visible;transform:none}25%{opacity:0;visibility:hidden;transform:translateX(48px)}93.75%{opacity:0;visibility:hidden;transform:translateX(48px)}100%{opacity:1;visibility:visible;transform:none}}
   .cy30{animation:cy30 4.8s linear -11.00s infinite backwards}
   @keyframes cy31{0%{opacity:0;visibility:hidden;transform:translateX(48px)}25%{opacity:0;visibility:hidden;transform:translateX(48px)}32.292%{opacity:1;visibility:visible;transform:none}44.792%{opacity:1;visibility:visible;transform:none}50%{opacity:0;visibility:hidden;transform:translateX(48px)}100%{opacity:0;visibility:hidden;transform:translateX(48px)}}
-  .cy31{animation:cy31 4.8s linear -9.80s infinite backwards}
+  .cy31{animation:cy31 4.8s linear -11.00s infinite backwards}
   @keyframes cy32{0%{opacity:0;visibility:hidden;transform:translateX(48px)}50%{opacity:0;visibility:hidden;transform:translateX(48px)}57.292%{opacity:1;visibility:visible;transform:none}69.792%{opacity:1;visibility:visible;transform:none}75%{opacity:0;visibility:hidden;transform:translateX(48px)}100%{opacity:0;visibility:hidden;transform:translateX(48px)}}
-  .cy32{animation:cy32 4.8s linear -8.60s infinite backwards}
+  .cy32{animation:cy32 4.8s linear -11.00s infinite backwards}
   @keyframes cy33{0%{opacity:0;visibility:hidden;transform:translateX(48px)}75%{opacity:0;visibility:hidden;transform:translateX(48px)}82.292%{opacity:1;visibility:visible;transform:none}94.792%{opacity:1;visibility:visible;transform:none}100%{opacity:0;visibility:hidden;transform:translateX(48px)}100%{opacity:0;visibility:hidden;transform:translateX(48px)}}
-  .cy33{animation:cy33 4.8s linear -7.40s infinite backwards}
+  .cy33{animation:cy33 4.8s linear -11.00s infinite backwards}
   @keyframes k34{0%{opacity:0;visibility:hidden;transform:translateY(10px)}-165.833%{opacity:1;visibility:visible;transform:none}-106.667%{opacity:1;visibility:visible;transform:none}100%{opacity:1;visibility:visible;transform:none}}
   @keyframes k35{0%{opacity:0;visibility:hidden;transform:translateY(6px)}-92.5%{opacity:1;visibility:visible;transform:none}-6.667%{opacity:1;visibility:visible;transform:none}100%{opacity:1;visibility:visible;transform:none}}
   @keyframes k36{0%{opacity:0;visibility:hidden;transform:translateY(8px) scale(0.96)}-89.167%{opacity:1;visibility:visible;transform:none}-6.667%{opacity:1;visibility:visible;transform:none}100%{opacity:1;visibility:visible;transform:none}}
