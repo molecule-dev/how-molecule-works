@@ -17,7 +17,7 @@ import { PageMeta } from '../components/PageMeta.js'
 export function About() {
   const cm = getClassMap()
   const { t } = useTranslation()
-  const title = t('about.title', undefined, { defaultValue: 'About this site' })
+  const title = t('about.thisSite', undefined, { defaultValue: 'About this site' })
   const links: Array<{ id: string; href: string; label: string; note: string }> = [
     {
       id: 'site',

@@ -44,7 +44,7 @@ export function Footer() {
             GitHub
           </a>
           <Link className={cm.link} to="/about/" data-mol-id="footer-about">
-            {t('footer.about', undefined, { defaultValue: 'About this site' })}
+            {t('footer.aboutSite', undefined, { defaultValue: 'About this site' })}
           </Link>
         </nav>
       </div>
