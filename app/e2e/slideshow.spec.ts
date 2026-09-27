@@ -81,6 +81,22 @@ test('hovering a package chip explains it, and clicking opens its page', async (
   await popup.close()
 })
 
+test('clicking the prompt opens molecule.dev with that prompt prefilled', async ({
+  page,
+  context,
+}) => {
+  await page.goto('/')
+  await page.waitForTimeout(1200)
+  const card = page.locator(`${stage} [data-href^="https://www.molecule.dev/#prompt="]`).first()
+  const [popup] = await Promise.all([
+    context.waitForEvent('page'),
+    card.click({ position: { x: 40, y: 40 } }),
+  ])
+  await popup.waitForURL(/#prompt=/)
+  expect(decodeURIComponent(new URL(popup.url()).hash)).toContain('AI travel agent')
+  await popup.close()
+})
+
 test('plain links show no tooltip', async ({ page }) => {
   await page.goto('/')
   await page.locator(`${stage} [data-href="https://www.molecule.dev"]`).last().hover()

@@ -363,7 +363,8 @@ function build(theme, slide = null) {
     const ph = 140
     const promptK = show(s + 0.2, s + SCENE, { from: 'translateY(12px)' })
     // The landing prompt form: input background, 8px radius, a 2px gradient ring.
-    scene1 += `<g ${A(promptK)}><rect x="${px - 2}" y="${py - 2}" width="${pw + 4}" height="${ph + 4}" rx="10" fill="url(#ring)"/><rect x="${px}" y="${py}" width="${pw}" height="${ph}" rx="8" fill="${C.input}"/>${eyebrow(px + 20, py + 30, 'You', { color: C.faint })}`
+    // Clicking the prompt opens molecule.dev with this prompt prefilled and selected.
+    scene1 += `<g ${A(promptK)}${hov({ href: `https://www.molecule.dev/#prompt=${encodeURIComponent(prompt)}` })}><rect x="${px - 2}" y="${py - 2}" width="${pw + 4}" height="${ph + 4}" rx="10" fill="url(#ring)"/><rect x="${px}" y="${py}" width="${pw}" height="${ph}" rx="8" fill="${C.input}"/>${eyebrow(px + 20, py + 30, 'You', { color: C.faint })}`
     // Typing: each glyph fades in at its own time; the cursor steps along with it.
     LINES.forEach((line, li) => {
       scene1 += txt(px + 20, py + 62 + li * 24, line, {
