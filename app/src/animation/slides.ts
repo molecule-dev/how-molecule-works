@@ -57,10 +57,13 @@ export function hashForSlide(index: number): string {
  * @returns Markup to inject as HTML.
  */
 export function prepareSlideSvg(svg: string): string {
-  return svg.replace(
-    /<svg([^>]*?)\swidth="1200"\sheight="700"/,
-    '<svg$1 style="width:100%;height:auto;display:block"',
-  )
+  // An inlined SVG's <title> becomes a native tooltip over the whole graphic; the page labels the slide itself.
+  return svg
+    .replace(/<title[^>]*>[^<]*<\/title>/, '')
+    .replace(
+      /<svg([^>]*?)\swidth="1200"\sheight="700"/,
+      '<svg$1 style="width:100%;height:auto;display:block"',
+    )
 }
 
 /**

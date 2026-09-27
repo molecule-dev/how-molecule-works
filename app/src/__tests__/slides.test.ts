@@ -38,6 +38,13 @@ describe('the deck', () => {
 })
 
 describe('prepareSlideSvg', () => {
+  it('drops the <title>, which a browser would show as a tooltip over the whole slide', () => {
+    const out = prepareSlideSvg(
+      '<svg viewBox="0 0 1200 700" width="1200" height="700"><title id="t">How Molecule works</title><g/></svg>',
+    )
+    expect(out).not.toContain('<title')
+  })
+
   it('lets the viewBox size the slide instead of fixed pixels', () => {
     const out = prepareSlideSvg(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700"><g/></svg>',

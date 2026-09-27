@@ -884,8 +884,7 @@ function build(theme, slide = null) {
   const stops = C.gradient
     .map((c, i) => `<stop offset="${(i / (C.gradient.length - 1)).toFixed(3)}" stop-color="${c}"/>`)
     .join('')
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-labelledby="t d">
-<title id="t">How Molecule works</title>
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-labelledby="${SLIDE ? 'd' : 't d'}">${SLIDE ? '' : '<title id="t">How Molecule works</title>'}
 <desc id="d">Describe the app you want, and Synthase, the agent in the molecule.dev IDE, assembles a real TypeScript project from the open-source @molecule catalog. Every capability sits behind a core interface with swappable provider bonds, so changing the database means changing one import, never the application code. Auth, payments, i18n, analytics, monitoring, tests and CI ship wired on day one, so the integrations every real app needs are never rebuilt from scratch. Every app ships with analytics, error tracking and feedback built in, and the AI uses what real users do to improve it, ship the change and measure again. The result is a faster, cheaper, higher-quality full-stack app for web, mobile and API that stays easy to maintain and scale, because every provider is swappable.</desc>
 <defs>
   <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">${stops}</linearGradient>
