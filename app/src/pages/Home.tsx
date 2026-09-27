@@ -38,7 +38,7 @@ export function Home() {
           {t('home.sameAsReadme', undefined, {
             defaultValue:
               'This is the same graphic the molecule README embeds — one source, generated on every build of this site.',
-          })}{' '}
+          }) + ' '}
           <a
             className={cm.link}
             href={MOLECULE_REPO_URL}

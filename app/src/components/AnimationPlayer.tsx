@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type React from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useTheme, useTranslation } from '@molecule/app-react'
 import { getClassMap } from '@molecule/app-ui'
@@ -27,6 +28,40 @@ const glyph = {
 }
 
 /**
+ * The graphic's animations. CSS animations are created after the first style
+ * pass — later than a mount effect — so an empty cache is re-read on demand.
+ */
+function animationsOf(stage: HTMLElement | null, cache: { current: Animation[] }): Animation[] {
+  const stale = cache.current.length === 0 || cache.current[0].playState === 'idle'
+  if (stale && stage) cache.current = stage.getAnimations({ subtree: true })
+  return cache.current
+}
+
+/**
+ * The inlined graphic. Kept in a memoized leaf: after hydration, React re-sets
+ * `innerHTML` on the first update of the element carrying it, which replaces
+ * the SVG and restarts its animations. Nothing here changes on the player's
+ * own state, so this element is updated only when the markup (theme) does.
+ */
+const Stage = memo(function Stage({
+  markup,
+  stageRef,
+}: {
+  markup: string
+  stageRef: React.RefObject<HTMLDivElement | null>
+}) {
+  return (
+    <div
+      ref={stageRef}
+      data-mol-id="player-stage"
+      // The graphic sets its own background and corner radius; the stage only sizes it.
+      style={{ maxWidth: 1200, margin: '0 auto', lineHeight: 0 }}
+      dangerouslySetInnerHTML={{ __html: markup }}
+    />
+  )
+})
+
+/**
  * The README graphic, inlined and driven through the Web Animations API:
  * play/pause, scene jumps, a scrubber, speed and fullscreen, with the keyboard
  * and the graphic's own scene index as extra ways in. The theme toggle in the
@@ -42,6 +77,8 @@ export function AnimationPlayer() {
   const stageRef = useRef<HTMLDivElement>(null)
   const animsRef = useRef<Animation[]>([])
   const wantPlayingRef = useRef(true)
+  /** Last known loop position, kept across a markup swap (fresh animations start at 0). */
+  const timeRef = useRef(0)
   const [playing, setPlaying] = useState(true)
   const [seconds, setSeconds] = useState(0)
   const [speed, setSpeed] = useState<number>(1)
@@ -50,20 +87,21 @@ export function AnimationPlayer() {
 
   /** The current loop position, read off the first animation. */
   const readTime = useCallback((): number => {
-    const a = animsRef.current[0]
+    const a = animationsOf(stageRef.current, animsRef)[0]
     const ms = typeof a?.currentTime === 'number' ? a.currentTime : 0
     return loopTime(ms / 1000)
   }, [])
 
   const seek = useCallback((toSeconds: number) => {
     const ms = loopTime(toSeconds) * 1000
-    for (const a of animsRef.current) a.currentTime = ms
+    for (const a of animationsOf(stageRef.current, animsRef)) a.currentTime = ms
+    timeRef.current = loopTime(toSeconds)
     setSeconds(loopTime(toSeconds))
   }, [])
 
   const applyPlayState = useCallback((play: boolean) => {
     wantPlayingRef.current = play
-    for (const a of animsRef.current) {
+    for (const a of animationsOf(stageRef.current, animsRef)) {
       if (play) a.play()
       else a.pause()
     }
@@ -71,7 +109,7 @@ export function AnimationPlayer() {
   }, [])
 
   const applySpeed = useCallback((rate: number) => {
-    for (const a of animsRef.current) a.playbackRate = rate
+    for (const a of animationsOf(stageRef.current, animsRef)) a.playbackRate = rate
     setSpeed(rate)
   }, [])
 
@@ -80,10 +118,10 @@ export function AnimationPlayer() {
   useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
-    const previous = readTime()
-    animsRef.current = stage.getAnimations({ subtree: true })
+    const previous = timeRef.current
+    animsRef.current = []
     const ms = previous * 1000
-    for (const a of animsRef.current) {
+    for (const a of animationsOf(stageRef.current, animsRef)) {
       a.currentTime = ms
       a.playbackRate = speed
       if (wantPlayingRef.current) a.play()
@@ -121,6 +159,7 @@ export function AnimationPlayer() {
     let last = -1
     const tick = () => {
       const now = readTime()
+      timeRef.current = now
       const bucket = Math.floor(now * 10)
       if (bucket !== last) {
         last = bucket
@@ -204,17 +243,11 @@ export function AnimationPlayer() {
   return (
     <section
       data-mol-id="player"
+      data-playing={playing ? 'true' : 'false'}
+      data-scene={scene}
       aria-label={t('player.label', undefined, { defaultValue: 'How Molecule works, animated' })}
     >
-      <div
-        ref={stageRef}
-        data-mol-id="player-stage"
-        data-playing={playing ? 'true' : 'false'}
-        data-scene={scene}
-        // The graphic sets its own background and corner radius; the stage only sizes it.
-        style={{ maxWidth: 1200, margin: '0 auto', lineHeight: 0 }}
-        dangerouslySetInnerHTML={{ __html: markup }}
-      />
+      <Stage markup={markup} stageRef={stageRef} />
 
       <div
         className={cm.cn(
@@ -305,8 +338,8 @@ export function AnimationPlayer() {
               <span aria-hidden="true">{i + 1}</span>
               <span className={cm.srOnly}>
                 {t('player.sceneNumber', { n: i + 1 }, { defaultValue: 'Scene {{n}}: ' })}
-              </span>{' '}
-              {t(`player.scene.${s.id}`, undefined, { defaultValue: s.label })}
+              </span>
+              <span>{` ${t(`player.scene.${s.id}`, undefined, { defaultValue: s.label })}`}</span>
             </button>
           ))}
         </div>
@@ -325,7 +358,7 @@ export function AnimationPlayer() {
               aria-pressed={rate === speed}
               data-mol-id={`player-speed-${rate}`}
             >
-              {rate}×
+              {`${rate}×`}
             </button>
           ))}
           <button
@@ -362,15 +395,16 @@ export function AnimationPlayer() {
           className={cm.cn(cm.textSize('xs'), cm.textMuted, cm.sp('pt', 1))}
           data-mol-id="player-hint"
         >
-          {t(
-            'player.currentScene',
-            { n: scene + 1, title: TIMELINE.scenes[scene].title },
-            { defaultValue: 'Scene {{n}} of 5 — {{title}}' },
-          )}
-          {' · '}
-          {t('player.keys', undefined, {
-            defaultValue: 'Keys: space play/pause · ← → scenes · 1–5 jump · F fullscreen',
-          })}
+          {[
+            t(
+              'player.currentScene',
+              { n: scene + 1, title: TIMELINE.scenes[scene].title },
+              { defaultValue: 'Scene {{n}} of 5 — {{title}}' },
+            ),
+            t('player.keys', undefined, {
+              defaultValue: 'Keys: space play/pause · ← → scenes · 1–5 jump · F fullscreen',
+            }),
+          ].join(' · ')}
         </p>
       </div>
 

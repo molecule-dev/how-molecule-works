@@ -95,7 +95,7 @@ export function About() {
             >
               {l.label}
             </a>
-            <span className={cm.textMuted}> — {l.note}</span>
+            <span className={cm.textMuted}>{` — ${l.note}`}</span>
           </li>
         ))}
       </ul>

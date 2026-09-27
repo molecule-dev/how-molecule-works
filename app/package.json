@@ -16,7 +16,8 @@
     "format:check": "prettier --check 'src/**/*.{ts,tsx}'",
     "test:e2e": "playwright test",
     "test:e2e:changed": "playwright test --only-changed --list && playwright test --only-changed",
-    "animation": "node scripts/build-animation.mjs"
+    "animation": "node scripts/build-animation.mjs",
+    "serve": "node scripts/serve-dist.mjs"
   },
   "dependencies": {
     "@molecule/app-ai-chat": "1.5.0",

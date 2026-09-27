@@ -21,7 +21,7 @@ test('the graphic is inlined and animating on load', async ({ page }) => {
   await page.goto('/')
   const stage = page.locator('[data-mol-id="player-stage"] svg')
   await expect(stage).toBeVisible()
-  await expect(page.locator('[data-mol-id="player-stage"]')).toHaveAttribute('data-playing', 'true')
+  await expect(page.locator('[data-mol-id="player"]')).toHaveAttribute('data-playing', 'true')
   const t1 = await position(page)
   await page.waitForTimeout(400)
   const t2 = await position(page)
@@ -32,10 +32,7 @@ test('pause stops the clock and play resumes it', async ({ page }) => {
   await page.goto('/')
   const toggle = page.getByRole('button', { name: /pause/i })
   await toggle.click()
-  await expect(page.locator('[data-mol-id="player-stage"]')).toHaveAttribute(
-    'data-playing',
-    'false',
-  )
+  await expect(page.locator('[data-mol-id="player"]')).toHaveAttribute('data-playing', 'false')
   const t1 = await position(page)
   await page.waitForTimeout(300)
   expect(await position(page)).toBeCloseTo(t1, 2)
@@ -48,22 +45,22 @@ test('scene buttons and arrow keys jump between scenes', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /pause/i }).click()
   await page.locator('[data-mol-id="player-scene-3"]').click()
-  await expect(page.locator('[data-mol-id="player-stage"]')).toHaveAttribute('data-scene', '2')
+  await expect(page.locator('[data-mol-id="player"]')).toHaveAttribute('data-scene', '2')
   expect(await position(page)).toBeGreaterThanOrEqual(12)
   await page.keyboard.press('ArrowRight')
-  await expect(page.locator('[data-mol-id="player-stage"]')).toHaveAttribute('data-scene', '3')
+  await expect(page.locator('[data-mol-id="player"]')).toHaveAttribute('data-scene', '3')
   await page.keyboard.press('ArrowLeft')
   await page.keyboard.press('ArrowLeft')
-  await expect(page.locator('[data-mol-id="player-stage"]')).toHaveAttribute('data-scene', '1')
+  await expect(page.locator('[data-mol-id="player"]')).toHaveAttribute('data-scene', '1')
   await page.keyboard.press('5')
-  await expect(page.locator('[data-mol-id="player-stage"]')).toHaveAttribute('data-scene', '4')
+  await expect(page.locator('[data-mol-id="player"]')).toHaveAttribute('data-scene', '4')
 })
 
 test('the scrubber seeks', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /pause/i }).click()
   await page.locator('[data-mol-id="player-scrubber"]').fill('20')
-  await expect(page.locator('[data-mol-id="player-stage"]')).toHaveAttribute('data-scene', '3')
+  await expect(page.locator('[data-mol-id="player"]')).toHaveAttribute('data-scene', '3')
   expect(await position(page)).toBeCloseTo(20, 0)
 })
 
@@ -84,7 +81,7 @@ test('the theme toggle swaps the variant and keeps the position', async ({ page 
     )
     .not.toBe(fillBefore)
   expect(await position(page)).toBeCloseTo(before, 0)
-  await expect(page.locator('[data-mol-id="player-stage"]')).toHaveAttribute('data-scene', '3')
+  await expect(page.locator('[data-mol-id="player"]')).toHaveAttribute('data-scene', '3')
 })
 
 test('the raw SVGs are served for embedding', async ({ page }) => {

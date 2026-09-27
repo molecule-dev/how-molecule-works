@@ -38,7 +38,7 @@ export const MOLECULE_REPO_URL = 'https://github.com/molecule-dev/molecule'
  * This project's public workspace on molecule.dev (its share link), the same
  * place the deployed badge points. Empty until the share link exists.
  */
-export const WORKSPACE_URL = ''
+export const WORKSPACE_URL = 'https://www.molecule.dev/share/4fac73a7aea7716299d7a4ba90396de6'
 
-/** Where this site's source lives. Empty until it is published. */
-export const SOURCE_URL = ''
+/** Where this site's source lives. */
+export const SOURCE_URL = 'https://github.com/molecule-dev/how-molecule-works'

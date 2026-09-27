@@ -18,7 +18,7 @@ export const BASE_PATH: string = import.meta.env.BASE_URL || '/'
 /** The basename react-router wants: no trailing slash, `/` for the root. */
 export const ROUTER_BASENAME: string = BASE_PATH === '/' ? '/' : BASE_PATH.replace(/\/+$/, '')
 
-export const SITE_URL: string = String(import.meta.env.VITE_SITE_URL || 'http://localhost:3000')
+export const SITE_URL: string = String(import.meta.env.VITE_SITE_URL || 'https://how-molecule-works.apps.mlcl.dev')
   .trim()
   .replace(/\/+$/, '')
 
