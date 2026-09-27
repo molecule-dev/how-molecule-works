@@ -24,7 +24,7 @@
  *
  * One 30-second loop, five scenes of six seconds:
  *   1. Describe → compose      2. Bonds (swap providers, not code)
- *   3. Built in by default     4. Verified, then fed back
+ *   3. Built in by default     4. Your app learns from its users
  *   5. Why it pays off
  *
  * Fonts come from public/fonts (the Arimo files @molecule/app-fonts-arimo
@@ -281,7 +281,7 @@ function build(theme) {
   const header = `${logo}${txt(112, 68, 'How Molecule works', { size: 22, weight: 700, color: C.strong }).svg}${txt(1140, 68, 'molecule.dev', { size: 15, weight: 500, color: C.link, anchor: 'end' }).svg}`
 
   // Scene index along the bottom: five segments, the live one lit.
-  const SCENES = ['Describe', 'Bonds', 'Built in', 'Verify loop', 'Outcomes']
+  const SCENES = ['Describe', 'Bonds', 'Built in', 'Feedback loop', 'Outcomes']
   let footer = ''
   {
     const segW = 200
@@ -573,17 +573,23 @@ function build(theme) {
   }
 
   // ============================================================= SCENE 4
+  // The app's own loop: built-in telemetry → the AI → a better release → measure.
   let scene4 = caption(
     3,
-    'Verified before it reaches you. Then it learns.',
-    'Generated code is type-checked, linted and tested; errors go straight back to the agent. Failure patterns feed the packages and prompts.',
+    'Your app learns from its users.',
+    'Analytics, error tracking and feedback ship built in. The AI reads what real users do, improves the app, ships, and measures again.',
   )
   {
     const s = 3 * SCENE
-    const lcx = 268
+    const lcx = 300
     const lcy = 420
     const lr = 118
-    const steps = ['Synthase writes', 'type-check · lint · tests', 'errors fed back', 'agent fixes']
+    const steps = [
+      'people use the app',
+      'analytics · errors · feedback',
+      'the AI reads the signals',
+      'improves · ships · measures',
+    ]
     const ringK = show(s + 0.2, s + SCENE, { from: 'scale(0.9)', fadeIn: 0.5 })
     scene4 += `<g ${AT(ringK)}><circle cx="${lcx}" cy="${lcy}" r="${lr}" fill="none" stroke="${C.border}" stroke-width="2"/>`
     for (let i = 0; i < 4; i++) {
@@ -605,7 +611,7 @@ function build(theme) {
         weight: 600,
         stroke: color,
       })
-      const outward = (Math.cos(ang) > 0 ? 1 : -1) * (c0.w / 2 - 30)
+      const outward = Math.cos(ang) > 0 ? c0.w / 2 - 30 : -(c0.w / 2 - 56)
       scene4 += chip(nx + outward, ny - 16, label, {
         dot: color,
         anchor: 'middle',
@@ -614,40 +620,33 @@ function build(theme) {
         stroke: color,
       }).svg
     })
-    scene4 += `${txt(lcx, lcy - 4, 'every build', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}${txt(lcx, lcy + 16, 'until green', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}</g>`
+    scene4 += `${txt(lcx, lcy - 4, 'every release', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}${txt(lcx, lcy + 16, 'a little better', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}</g>`
     const spin = `r${++idCounter}`
     keyframes.push(
       `@keyframes ${spin}{0%{opacity:0;transform:rotate(0deg)}${pct(s + 0.6)}%{opacity:0;transform:rotate(0deg)}${pct(s + 0.9)}%{opacity:1}${pct(s + SCENE - 0.3)}%{opacity:1;transform:rotate(720deg)}${pct(s + SCENE)}%{opacity:0;transform:rotate(720deg)}100%{opacity:0;transform:rotate(720deg)}}`,
     )
     scene4 += `<g style="transform-box:view-box;transform-origin:${lcx}px ${lcy}px;animation:${spin} ${LOOP}s linear infinite"><circle cx="${lcx}" cy="${lcy - lr}" r="7" fill="${C.link}"/><circle cx="${lcx}" cy="${lcy - lr}" r="13" fill="${C.link}" fill-opacity="0.25"/></g>`
 
+    // Right: signals arriving from the running app, and what the AI does with them.
     const ox = 620
     const oy = 200
-    const rowsK = [
-      show(s + 1.4, s + SCENE),
-      show(s + 2.2, s + SCENE),
-      show(s + 3.0, s + SCENE),
-      show(s + 3.8, s + SCENE),
+    const signals = [
+      ['analytics', 'Sign-ups stall on the second step of onboarding'],
+      ['error tracking', 'Invoice export throws for 14 users this week'],
+      ['feedback', '“Can I get this as CSV?” — asked nine times'],
     ]
-    const outer = [
-      ['Past conversations & builds', 'every failure pattern is a signal'],
-      ['Refine pipeline', 'extract → classify → review → propose'],
-      ['Prompts, skills & packages improve', 'the fix lands once, in a shared package'],
-      ['Every project benefits', 'new builds start where the last one learned'],
-    ]
-    outer.forEach(([title, sub], i) => {
-      const y = oy + i * 96
-      scene4 += `<g ${A(rowsK[i])}>${card(ox, y, 520, 72, { rx: 12 })}<rect x="${ox}" y="${y + 16}" width="4" height="40" rx="2" fill="${accent(i)}"/>${txt(ox + 24, y + 31, title, { size: 15.5, weight: 600, color: C.strong }).svg}${txt(ox + 24, y + 54, sub, { size: 13.5, color: C.gray }).svg}`
-      if (i < outer.length - 1)
-        scene4 += `<path d="M${ox + 260} ${y + 72} v14 M${ox + 255} ${y + 81} l5 6 l5 -6" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
-      scene4 += `</g>`
+    scene4 += `<g ${A(show(s + 1.2, s + SCENE))}>${eyebrow(ox, oy - 14, 'from the running app')}</g>`
+    signals.forEach(([kind, text], i) => {
+      const y = oy + i * 68
+      const k = show(s + 1.4 + i * 0.5, s + SCENE, { from: 'translateX(14px)' })
+      scene4 += `<g ${A(k)}>${card(ox, y, 520, 54, { rx: 12 })}<rect x="${ox}" y="${y + 12}" width="4" height="30" rx="2" fill="${accent(i)}"/>${eyebrow(ox + 24, y + 22, kind, { color: accent(i) })}${txt(ox + 24, y + 42, text, { size: 13.5, color: C.text }).svg}</g>`
     })
-    const backLen = 96 * 3 + 72 + 40
-    const back = draw(s + 4.4, s + SCENE, backLen, { dur: 0.6 })
-    scene4 += `<path d="M${ox + 520} ${oy + 96 * 3 + 36} h24 v-${96 * 3} h-24" fill="none" stroke="${C.green}" stroke-width="2" stroke-dasharray="${backLen}" ${A(back.name)}/>`
-    const backHeadK = show(s + 5.0, s + SCENE, { fadeIn: 0.2 })
-    scene4 += `<path d="M${ox + 528} ${oy + 30} l-8 6 l8 6" fill="none" stroke="${C.green}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${A(backHeadK)}/>`
-    scene4 += `<g ${A(rowsK[0])}>${eyebrow(ox, oy - 14, 'across builds')}</g>`
+    // The AI's response, then the measured result.
+    const ay = oy + 3 * 68 + 12
+    const aiK = show(s + 3.2, s + SCENE, { from: 'translateY(10px)' })
+    scene4 += `<g ${A(aiK)}><path d="M${ox + 260} ${ay - 12} v10 M${ox + 255} ${ay - 7} l5 6 l5 -6" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${card(ox, ay + 4, 520, 96, { rx: 12, stroke: C.primary, sw: 1.5 })}${eyebrow(ox + 24, ay + 30, 'the AI, in your workspace')}${txt(ox + 24, ay + 54, 'Shortens onboarding to one step · fixes the export · adds CSV', { size: 13.5, color: C.strong, weight: 600 }).svg}${txt(ox + 24, ay + 76, 'Type-checked, tested and deployed — you approve, or let it run.', { size: 13, color: C.gray }).svg}</g>`
+    const resK = show(s + 4.4, s + SCENE, { from: 'translateY(8px)' })
+    scene4 += `<g ${A(resK)}>${chip(ox, ay + 120, 'next release: sign-ups up, export errors gone — measured, not guessed', { dot: C.green, size: 12.5 }).svg}${txt(ox, ay + 172, 'Swap Mixpanel for PostHog or Sentry for another tracker: the instrumentation stays.', { size: 13, color: C.gray }).svg}</g>`
   }
 
   // ============================================================= SCENE 5
@@ -725,7 +724,7 @@ function build(theme) {
     .join('')
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-labelledby="t d">
 <title id="t">How Molecule works</title>
-<desc id="d">Describe an app; Synthase or the mlcl CLI composes it from 950+ open-source @molecule packages. Every provider sits behind a swappable bond, so the app never changes when a provider does. Auth, payments, i18n, analytics, monitoring, realtime, tests and CI are built in by default. Generated code is type-checked, linted and tested, with errors fed back until green, and failure patterns improve the shared packages. The result: faster, cheaper, higher-quality full-stack, cross-platform apps that are easier to maintain and scale.</desc>
+<desc id="d">Describe an app; Synthase or the mlcl CLI composes it from 950+ open-source @molecule packages. Every provider sits behind a swappable bond, so the app never changes when a provider does. Auth, payments, i18n, analytics, monitoring, realtime, tests and CI are built in by default. Analytics, error tracking and feedback are built in; the AI reads what real users do, improves the app, ships and measures again. The result: faster, cheaper, higher-quality full-stack, cross-platform apps that are easier to maintain and scale.</desc>
 <defs>
   <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">${stops}</linearGradient>
   ${[...glyphDefs.values()].join('\n  ')}
@@ -752,8 +751,11 @@ mkdirSync(OUT_SRC, { recursive: true })
 mkdirSync(OUT_PUBLIC, { recursive: true })
 for (const theme of ['dark', 'light']) {
   const svg = build(theme)
-  for (const dir of [OUT_SRC, OUT_PUBLIC]) writeFileSync(join(dir, `how-molecule-works-${theme}.svg`), svg)
-  console.log(`wrote how-molecule-works-${theme}.svg (${(svg.length / 1024).toFixed(0)} KB) → src/animation + public`)
+  for (const dir of [OUT_SRC, OUT_PUBLIC])
+    writeFileSync(join(dir, `how-molecule-works-${theme}.svg`), svg)
+  console.log(
+    `wrote how-molecule-works-${theme}.svg (${(svg.length / 1024).toFixed(0)} KB) → src/animation + public`,
+  )
 }
 writeFileSync(
   join(OUT_SRC, 'timeline.json'),
@@ -762,10 +764,14 @@ writeFileSync(
       loopSeconds: LOOP,
       sceneSeconds: SCENE,
       scenes: [
-        { id: 'describe', label: 'Describe', title: 'Describe it. Synthase composes a real project.' },
+        {
+          id: 'describe',
+          label: 'Describe',
+          title: 'Describe it. Synthase composes a real project.',
+        },
         { id: 'bonds', label: 'Bonds', title: 'Swap the provider, not the app.' },
         { id: 'built-in', label: 'Built in', title: 'The last 10% ships on day one.' },
-        { id: 'verify', label: 'Verify loop', title: 'Verified before it reaches you. Then it learns.' },
+        { id: 'feedback', label: 'Feedback loop', title: 'Your app learns from its users.' },
         { id: 'outcomes', label: 'Outcomes', title: 'Why it pays off.' },
       ],
     },

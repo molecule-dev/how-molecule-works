@@ -18,9 +18,9 @@
       "title": "The last 10% ships on day one."
     },
     {
-      "id": "verify",
-      "label": "Verify loop",
-      "title": "Verified before it reaches you. Then it learns."
+      "id": "feedback",
+      "label": "Feedback loop",
+      "title": "Your app learns from its users."
     },
     {
       "id": "outcomes",
