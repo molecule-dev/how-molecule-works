@@ -439,8 +439,10 @@ export function SlidePanel({ index }: { index: number }) {
 export const PANEL_CSS = `
 .hmw-panel{padding:18px 18px 16px;border:1px solid var(--hmw-border);border-radius:16px;background:var(--hmw-bg);color:var(--hmw-text);font-size:14px;line-height:1.5;text-align:left}
 .hmw-panel a{color:inherit;text-decoration:none}
-.hmw-ph{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}
+.hmw-ph{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;margin:0 0 14px}
 .hmw-ph a{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--hmw-strong)}
+.hmw-ph a:first-child{white-space:nowrap}
+@media (max-width:359px){.hmw-panel{padding:16px 14px 14px}.hmw-ph a{font-size:14px}.hmw-ph a:first-child{gap:6px}.hmw-cap{font-size:16px}}
 .hmw-ph .hmw-ph-site{font-size:13px;font-weight:600;color:var(--hmw-link)}
 .hmw-cap{margin:0 0 16px;font-size:17px;font-weight:600;line-height:1.35;color:var(--hmw-strong)}
 .hmw-cap a{color:var(--hmw-link);text-decoration:underline;text-underline-offset:3px}
