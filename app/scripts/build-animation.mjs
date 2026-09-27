@@ -294,36 +294,38 @@ function build(theme, slide = null) {
     })
     return s
   }
-  /** Scene caption: `.m-h2`-style title and `.m-lead`-style subtitle. */
-  function caption(i, title, sub) {
+  /** Scene caption: one sentence, in the site's heading weight, wrapped to the card. */
+  function caption(i, sentence) {
     const s = i * SCENE
     const k = show(s, s + SCENE, { from: 'translateY(6px)' })
-    return `<g ${A(k)}>${txt(60, 130, title, { size: 34, weight: 700, tracking: -0.02, color: C.strong }).svg}${txt(60, 160, sub, { size: 17, color: C.gray }).svg}</g>`
+    const lines = wrap(sentence, 1080, 24, 600)
+    return `<g ${A(k)}>${lines.map((l, li) => txt(60, 122 + li * 31, l, { size: 24, weight: 600, tracking: -0.01, color: C.strong }).svg).join('')}</g>`
   }
   const accent = (i) => C.accents[i % C.accents.length]
 
   // ------------------------------------------------------------------ header
   const logo = `<g transform="translate(58 40) scale(1.25)"><g transform="matrix(.86229 0 0 .86229 .81594 2.2034)" stroke="${C.primary}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4737"><g><line x1="20.959" x2="24.924" y1="18.579" y2="25.446"/><line x1="20.959" x2="24.924" y1="13.422" y2="6.555"/><line x1="16.494" x2="8.563" y1="16" y2="16"/></g><g fill="none"><circle cx="19.47" cy="16" r="2.976"/><circle cx="5.587" cy="16" r="2.977"/><circle cx="26.412" cy="28.023" r="2.976"/><circle cx="26.412" cy="3.977" r="2.976"/></g></g></g>`
-  const header = `<g${hov({ info: 'Describe an app at molecule.dev and watch it come together.', href: 'https://www.molecule.dev' })}>${logo}${txt(112, 68, 'How Molecule works', { size: 22, weight: 700, color: C.strong }).svg}</g><g${hov({ info: 'Open molecule.dev', href: 'https://www.molecule.dev' })}>${txt(1140, 68, 'molecule.dev', { size: 15, weight: 500, color: C.link, anchor: 'end' }).svg}</g>`
+  const header = `<g${hov({ href: 'https://www.molecule.dev' })}>${logo}${txt(112, 68, 'How Molecule works', { size: 22, weight: 700, color: C.strong }).svg}</g><g${hov({ href: 'https://www.molecule.dev' })}>${txt(1140, 68, 'molecule.dev', { size: 15, weight: 500, color: C.link, anchor: 'end' }).svg}</g>`
 
   // Scene index along the bottom: five segments, the live one lit.
   const SCENES = ['Describe', 'Bonds', 'Built in', 'Feedback loop', 'Outcomes']
-  const SCENE_TITLES = [
-    'Describe it. Synthase composes a real project.',
-    'Swap the provider, not the app.',
-    'The last 10% ships on day one.',
-    'Your app learns from its users.',
-    'Why it pays off.',
-  ]
   let footer = ''
+  if (SLIDE) keyframes.push('@keyframes hmwp{from{transform:scaleX(0)}to{transform:scaleX(1)}}')
   {
-    const segW = 200
+    const segW = 184
     const y = 662
+    if (SLIDE) {
+      const chev = (x, d, nav) =>
+        `<g data-nav="${nav}"><rect x="${x - 12}" y="${y - 14}" width="36" height="44" fill="transparent"/><path d="${d}" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>`
+      footer +=
+        chev(60, `M${72} ${y - 2} l-7 7 l7 7`, 'prev') +
+        chev(1116, `M${1128} ${y - 2} l7 7 l-7 7`, 'next')
+    }
     SCENES.forEach((label, i) => {
-      const x = 60 + i * (segW + 20)
+      const x = 100 + i * (segW + 20)
       if (SLIDE) {
         const on = i === slide
-        footer += `<g data-scene="${i}"${hov({ info: on ? `You are here: ${SCENE_TITLES[i]}` : `Go to slide ${i + 1}: ${SCENE_TITLES[i]}` })} style="opacity:${on ? 1 : 0.35}"><rect x="${x - 4}" y="${y - 12}" width="${segW + 8}" height="44" fill="transparent"/><rect x="${x}" y="${y}" width="${segW}" height="3" rx="1.5" fill="${on ? C.link : C.border}"/>${txt(x, y + 24, `${i + 1}  ${label}`, { size: 12, weight: 600, tracking: 0.1, color: C.gray }).svg}</g>`
+        footer += `<g data-scene="${i}" style="opacity:${on ? 1 : 0.35}"><rect x="${x - 4}" y="${y - 12}" width="${segW + 8}" height="44" fill="transparent"/><rect x="${x}" y="${y}" width="${segW}" height="3" rx="1.5" fill="${C.border}"/>${on ? `<rect class="hmw-progress" x="${x}" y="${y}" width="${segW}" height="3" rx="1.5" fill="${C.link}" style="transform-box:fill-box;transform-origin:left center;animation:hmwp ${SCENE}s linear forwards"/>` : ''}${txt(x, y + 24, `${i + 1}  ${label}`, { size: 12, weight: 600, tracking: 0.1, color: C.gray }).svg}</g>`
         return
       }
       const kf = `s${++idCounter}`
@@ -335,39 +337,48 @@ function build(theme, slide = null) {
       keyframes.push(
         `@keyframes ${pf}{0%{transform:scaleX(0)}${s0 > 0 ? `${s0}%{transform:scaleX(0)}` : ''}${pct((i + 1) * SCENE)}%{transform:scaleX(1)}100%{transform:scaleX(${i === SCENES.length - 1 ? 1 : 0})}}`,
       )
-      footer += `<g ${A(kf)} data-scene="${i}"${hov({ info: `Go to slide ${i + 1}: ${SCENE_TITLES[i]}` })}><rect x="${x - 4}" y="${y - 12}" width="${segW + 8}" height="44" fill="transparent"/><rect x="${x}" y="${y}" width="${segW}" height="3" rx="1.5" fill="${C.border}"/><rect x="${x}" y="${y}" width="${segW}" height="3" rx="1.5" fill="${C.link}" style="transform-box:fill-box;transform-origin:left center;animation:${pf} ${LOOP}s linear infinite"/>${txt(x, y + 24, `${i + 1}  ${label}`, { size: 12, weight: 600, tracking: 0.1, color: C.gray }).svg}</g>`
+      footer += `<g ${A(kf)} data-scene="${i}"><rect x="${x - 4}" y="${y - 12}" width="${segW + 8}" height="44" fill="transparent"/><rect x="${x}" y="${y}" width="${segW}" height="3" rx="1.5" fill="${C.border}"/><rect x="${x}" y="${y}" width="${segW}" height="3" rx="1.5" fill="${C.link}" style="transform-box:fill-box;transform-origin:left center;animation:${pf} ${LOOP}s linear infinite"/>${txt(x, y + 24, `${i + 1}  ${label}`, { size: 12, weight: 600, tracking: 0.1, color: C.gray }).svg}</g>`
     })
   }
 
   // ============================================================= SCENE 1
   let scene1 = caption(
     0,
-    'Describe it. Synthase composes a real project.',
-    'From a sentence to a TypeScript codebase assembled from 950+ open-source @molecule/* packages.',
+    'Describe the app you want, and Synthase, the agent in the molecule.dev IDE, assembles a real TypeScript project from the open-source @molecule catalog.',
   )
   {
     const s = 0
-    const prompt = 'A CRM with Google sign-in, Stripe billing, and a mobile app.'
+    const LINES = [
+      'An AI travel agent that books',
+      'flights by voice, rebooks when',
+      'they’re delayed, and splits the bill.',
+    ]
+    const prompt = LINES.join(' ')
     const px = 60
     const py = 210
     const pw = 400
-    const ph = 116
+    const ph = 140
     const promptK = show(s + 0.2, s + SCENE, { from: 'translateY(12px)' })
     // The landing prompt form: input background, 8px radius, a 2px gradient ring.
     scene1 += `<g ${A(promptK)}><rect x="${px - 2}" y="${py - 2}" width="${pw + 4}" height="${ph + 4}" rx="10" fill="url(#ring)"/><rect x="${px}" y="${py}" width="${pw}" height="${ph}" rx="8" fill="${C.input}"/>${eyebrow(px + 20, py + 30, 'You', { color: C.faint })}`
     // Typing: each glyph fades in at its own time; the cursor steps along with it.
-    const l1 = prompt.slice(0, 33)
-    const l2 = prompt.slice(33)
-    scene1 += txt(px + 20, py + 62, l1, { size: 16, weight: 500, color: C.strong, cls: 'c1-' }).svg
-    scene1 += txt(px + 20, py + 86, l2, { size: 16, weight: 500, color: C.strong, cls: 'c2-' }).svg
+    LINES.forEach((line, li) => {
+      scene1 += txt(px + 20, py + 62 + li * 24, line, {
+        size: 16,
+        weight: 500,
+        color: C.strong,
+        cls: `c${li + 1}-`,
+      }).svg
+    })
     const typeStart = s + 0.7
-    const perChar = 1.9 / prompt.length
+    const perChar = 2.2 / prompt.length
     let ci = 0
     const cursor = []
-    for (const [line, cls, y0] of [
-      [l1, 'c1-', py + 48],
-      [l2, 'c2-', py + 72],
-    ]) {
+    for (const [line, cls, y0] of LINES.map((line, li) => [
+      line,
+      `c${li + 1}-`,
+      py + 48 + li * 24,
+    ])) {
       const run = face(500).layout(line)
       let pen = 0
       run.glyphs.forEach((g, i) => {
@@ -405,14 +416,12 @@ function build(theme, slide = null) {
 
     // Synthase / mlcl badges under the prompt.
     const badgeK = show(s + 2.8, s + SCENE)
-    const b1 = chip(px, 352, 'Synthase  ·  the agent in the molecule.dev IDE', {
-      info: 'Synthase asks a few questions, plans, then composes and wires the packages in a live sandbox with a preview.',
+    const b1 = chip(px, 376, 'Synthase  ·  the agent in the molecule.dev IDE', {
       href: 'https://www.molecule.dev',
       dot: accent(1),
       size: 13,
     })
-    const b2 = chip(px, 394, 'npx mlcl create  ·  the CLI / MCP server', {
-      info: 'The same catalog from a terminal or any coding agent: create, add, swap, deploy.',
+    const b2 = chip(px, 418, 'npx mlcl create  ·  the CLI / MCP server', {
       href: 'https://github.com/molecule-dev/molecule#the-molecule-cli-mlcl-and-mcp-server',
       dot: accent(0),
       size: 13,
@@ -424,14 +433,14 @@ function build(theme, slide = null) {
       400,
       14,
     ).forEach((l, i) => {
-      scene1 += txt(px, 462 + i * 22, l, { size: 14, color: C.gray }).svg
+      scene1 += txt(px, 486 + i * 22, l, { size: 14, color: C.gray }).svg
     })
     scene1 += `</g>`
 
     // Catalog column.
     const catX = 520
     const catK = show(s + 0.4, s + SCENE, { from: 'translateX(-8px)' })
-    let cat = `<g ${A(catK)}${hov({ info: 'Browse the whole catalog: cores, bonds, features, locales.', href: 'https://www.molecule.dev/packages' })}>${eyebrow(catX, 214, '@molecule/*  ·  959 packages')}`
+    let cat = `<g ${A(catK)}${hov({ href: 'https://www.molecule.dev/packages' })}>${eyebrow(catX, 214, '@molecule/*  ·  the catalog')}`
     for (let i = 0; i < 11; i++)
       cat += `<rect x="${catX}" y="${234 + i * 30}" width="${90 + ((i * 37) % 60)}" height="16" rx="5" fill="${C.layer}" stroke="${C.border}"/>`
     scene1 += cat + `</g>`
@@ -441,29 +450,29 @@ function build(theme, slide = null) {
     const cy = 420
     const r = 165
     const NODE_INFO = {
-      'api-database':
-        'The data core: findMany, create, updateById… Bonds for PostgreSQL, MySQL, SQLite and D1.',
-      'api-auth': 'Sessions, passwords, two-factor and OAuth behind one interface.',
-      'api-payments': 'Checkout, subscriptions and invoices; Stripe and others as bonds.',
+      'api-ai':
+        'One AI interface with tools and streaming; Anthropic, OpenAI, DeepSeek, Google and more as bonds.',
+      'api-flights': 'Flight search, booking and status behind one interface; providers as bonds.',
+      'api-ai-speech': 'Speech to text and text to speech, so the agent can listen and talk back.',
+      'api-payments': 'Checkout, subscriptions and split bills; Stripe and others as bonds.',
+      'api-sms': 'Texts and rebooking alerts through Twilio and others.',
       'app-react':
         'The React binding: hooks for auth, i18n, theme and routing over framework-agnostic cores.',
-      'app-i18n': 'Every UI string goes through t(); locale packages ship 80 languages.',
       'app-analytics': 'Track once against the interface; wire Mixpanel, PostHog or your own.',
-      'api-emails': 'Transactional email; Mailgun, SES and more as bonds.',
       'app-react-native': 'The same app on iOS and Android, with native device bonds.',
     }
     const nodes = [
-      'api-database',
-      'api-auth',
+      'api-ai',
+      'api-flights',
+      'api-ai-speech',
       'api-payments',
+      'api-sms',
       'app-react',
-      'app-i18n',
       'app-analytics',
-      'api-emails',
       'app-react-native',
     ]
     const centerK = show(s + 2.9, s + SCENE, { from: 'scale(0.6)', fadeIn: 0.5 })
-    scene1 += `<g ${AT(centerK)}${hov({ info: 'Your project: an Express API and a React app in plain TypeScript, yours to export and run anywhere.' })}><circle cx="${cx}" cy="${cy}" r="40" fill="${C.layer}" stroke="${C.primary}" stroke-width="2"/>${txt(cx, cy - 2, 'your', { size: 14, weight: 700, color: C.strong, anchor: 'middle' }).svg}${txt(cx, cy + 15, 'app', { size: 14, weight: 700, color: C.strong, anchor: 'middle' }).svg}</g>`
+    scene1 += `<g ${AT(centerK)}><circle cx="${cx}" cy="${cy}" r="40" fill="${C.layer}" stroke="${C.primary}" stroke-width="2"/>${txt(cx, cy - 2, 'your', { size: 14, weight: 700, color: C.strong, anchor: 'middle' }).svg}${txt(cx, cy + 15, 'app', { size: 14, weight: 700, color: C.strong, anchor: 'middle' }).svg}</g>`
     nodes.forEach((label, i) => {
       const color = accent(i)
       const ang = -Math.PI / 2 + (i * 2 * Math.PI) / nodes.length
@@ -496,21 +505,20 @@ function build(theme, slide = null) {
       scene1 += `<g ${AT(k)}>${c.svg}</g>`
     })
     const doneK = show(s + 5.3, s + SCENE, { fadeIn: 0.3 })
-    scene1 += `<g ${A(doneK)}>${chip(cx, cy + r + 46, 'Express API  +  React app  ·  compiles, tests pass, live preview', { dot: C.green, anchor: 'middle', size: 12.5, info: 'What you get: an Express API plus a React app that compiles, passes its tests and runs in a live preview.' }).svg}</g>`
+    scene1 += `<g ${A(doneK)}>${chip(cx, cy + r + 46, 'Express API  +  React app  ·  compiles, tests pass, live preview', { dot: C.green, anchor: 'middle', size: 12.5 }).svg}</g>`
   }
 
   // ============================================================= SCENE 2
   let scene2 = caption(
     1,
-    'Swap the provider, not the app.',
-    'Every capability is a core interface plus swappable bonds. Application code never touches a vendor SDK.',
+    'Every capability sits behind a core interface with swappable provider bonds, so changing the database means changing one import, never the application code.',
   )
   {
     const s = SCENE
     const cx0 = 60
     const cy0 = 205
     const codeK = show(s + 0.2, s + SCENE, { from: 'translateY(12px)' })
-    scene2 += `<g ${A(codeK)}${hov({ info: 'Application code imports the core interface, never a driver. This file does not change when the database does.', href: PKG('api-database') })}>${codeBlock(
+    scene2 += `<g ${A(codeK)}${hov({ href: PKG('api-database') })}>${codeBlock(
       cx0,
       cy0,
       560,
@@ -538,7 +546,7 @@ function build(theme, slide = null) {
     // bonds.ts with the provider import swapping.
     const bondsK = show(s + 0.6, s + SCENE, { from: 'translateY(12px)' })
     const by = 438
-    scene2 += `<g ${A(bondsK)}${hov({ info: 'The one wiring file. setPool and setStore receive whichever bond you import; nothing else knows the difference.' })}>${codeBlock(cx0, by, 560, 168, 'api/src/bonds.ts', [['// the one wiring file', CODE.dim], `import { pool, store } from`, '', `setPool(pool); setStore(store)`])}</g>`
+    scene2 += `<g ${A(bondsK)}>${codeBlock(cx0, by, 560, 168, 'api/src/bonds.ts', [['// the one wiring file', CODE.dim], `import { pool, store } from`, '', `setPool(pool); setStore(store)`])}</g>`
 
     // Right: the core interface, the bond slot, provider chips snapping in.
     const providers = [
@@ -550,7 +558,7 @@ function build(theme, slide = null) {
     const sx = 700
     const sy = 205
     const coreK = show(s + 0.4, s + SCENE, { from: 'translateY(12px)' })
-    scene2 += `<g ${A(coreK)}${hov({ info: 'A core is the contract only: types and signatures, zero implementation. Every bond for it returns the same shapes.', href: PKG('api-database') })}>${card(sx, sy, 440, 92, { stroke: C.primary, sw: 1.5 })}${eyebrow(sx + 24, sy + 34, 'core interface')}${mono(sx + 24, sy + 64, '@molecule/api-database', { size: 16, color: C.strong }).svg}${txt(sx + 416, sy + 64, 'findMany · create · update …', { size: 12.5, color: C.gray, anchor: 'end' }).svg}
+    scene2 += `<g ${A(coreK)}${hov({ href: PKG('api-database') })}>${card(sx, sy, 440, 92, { stroke: C.primary, sw: 1.5 })}${eyebrow(sx + 24, sy + 34, 'core interface')}${mono(sx + 24, sy + 64, '@molecule/api-database', { size: 16, color: C.strong }).svg}${txt(sx + 416, sy + 64, 'findMany · create · update …', { size: 12.5, color: C.gray, anchor: 'end' }).svg}
     <path d="M${sx + 200} ${sy + 92} v22 h40 v-22" fill="none" stroke="${C.primary}" stroke-width="1.5" stroke-dasharray="4 4"/>
     ${eyebrow(sx + 24, sy + 130, 'bond (provider)')}
     <rect x="${sx}" y="${sy + 142}" width="440" height="62" rx="14" fill="none" stroke="${C.border}" stroke-dasharray="6 5"/></g>`
@@ -605,7 +613,7 @@ function build(theme, slide = null) {
       'i18n',
       'logger',
     ]
-    let row = `<g ${A(catsK)}>${eyebrow(sx, sy + 250, 'Same pattern for 80+ categories')}`
+    let row = `<g ${A(catsK)}>${eyebrow(sx, sy + 250, 'The same pattern for every category')}`
     let xx = sx
     let yy = sy + 266
     cats.forEach((c) => {
@@ -617,7 +625,6 @@ function build(theme, slide = null) {
         size: 12.5,
         isMono: true,
         color: C.gray,
-        info: `${c}: one core interface, several bonds — swap the provider by changing the wiring.`,
       })
       row += ch.svg
       xx += ch.w + 8
@@ -635,8 +642,7 @@ function build(theme, slide = null) {
   // ============================================================= SCENE 3
   let scene3 = caption(
     2,
-    'The last 10% ships on day one.',
-    'Every real app needs the same integrations. Molecule wires tested packages for them instead of regenerating them.',
+    'Auth, payments, i18n, analytics, monitoring, tests and CI ship wired on day one, so the integrations every real app needs are never rebuilt from scratch.',
   )
   {
     const s = 2 * SCENE
@@ -645,7 +651,7 @@ function build(theme, slide = null) {
       'Auth & OAuth',
       'Payments & billing',
       'Database & migrations',
-      'i18n · 80 languages',
+      'i18n · dozens of languages',
       'Analytics & telemetry',
       'Logging & monitoring',
       'Error tracking',
@@ -663,7 +669,7 @@ function build(theme, slide = null) {
       'Sessions, passwords, two-factor and OAuth sign-in — @molecule/api-auth and app-auth.',
       'Checkout, subscriptions and invoices — @molecule/api-payments, with Stripe as a bond.',
       'A typed data store with migrations; PostgreSQL, MySQL, SQLite or D1 behind one interface.',
-      'Every UI string goes through t(); companion locale packages ship 80 languages.',
+      'Every UI string goes through t(); companion locale packages ship dozens of languages.',
       'One tracking interface on both ends; Mixpanel, PostHog or your own provider.',
       'Structured logging, health checks and uptime probes.',
       'Exceptions captured with context on API and app; the tracker is a swappable bond.',
@@ -696,20 +702,13 @@ function build(theme, slide = null) {
   // The app's own loop: built-in telemetry → the AI → a better release → measure.
   let scene4 = caption(
     3,
-    'Your app learns from its users.',
-    'Analytics, error tracking and feedback ship built in. The AI reads what real users do, improves the app, ships, and measures again.',
+    'Every app ships with analytics, error tracking and feedback built in, and the AI uses what real users do to improve it, ship the change and measure again.',
   )
   {
     const s = 3 * SCENE
     const lcx = 300
     const lcy = 420
     const lr = 118
-    const STEP_INFO = [
-      'Real usage in production, on web and mobile.',
-      'Analytics events, captured errors and in-app feedback, all built into the scaffold.',
-      'The AI reads the signals in your workspace on molecule.dev and proposes what to change.',
-      'The change is type-checked, tested and deployed; the next release is measured with the same instrumentation.',
-    ]
     const steps = [
       'people use the app',
       'analytics · errors · feedback',
@@ -744,7 +743,6 @@ function build(theme, slide = null) {
         size: 13,
         weight: 600,
         stroke: color,
-        info: STEP_INFO[i],
       }).svg
     })
     scene4 += `${txt(lcx, lcy - 4, 'every release', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}${txt(lcx, lcy + 16, 'a little better', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}</g>`
@@ -762,11 +760,6 @@ function build(theme, slide = null) {
     // Right: signals arriving from the running app, and what the AI does with them.
     const ox = 620
     const oy = 200
-    const SIGNAL_INFO = [
-      'From @molecule/app-analytics: funnel steps tracked against one interface, whatever the provider.',
-      'From the error-tracking bond: the exception, who hit it and how often.',
-      'From the built-in feedback widget: what people ask for, in their words.',
-    ]
     const signals = [
       ['analytics', 'Sign-ups stall on the second step of onboarding'],
       ['error tracking', 'Invoice export throws for 14 users this week'],
@@ -776,21 +769,20 @@ function build(theme, slide = null) {
     signals.forEach(([kind, text], i) => {
       const y = oy + i * 68
       const k = show(s + 1.4 + i * 0.5, s + SCENE, { from: 'translateX(14px)' })
-      scene4 += `<g ${A(k)}${hov({ info: SIGNAL_INFO[i] })}>${card(ox, y, 520, 54, { rx: 12 })}<rect x="${ox}" y="${y + 12}" width="4" height="30" rx="2" fill="${accent(i)}"/>${eyebrow(ox + 24, y + 22, kind, { color: accent(i) })}${txt(ox + 24, y + 42, text, { size: 13.5, color: C.text }).svg}</g>`
+      scene4 += `<g ${A(k)}>${card(ox, y, 520, 54, { rx: 12 })}<rect x="${ox}" y="${y + 12}" width="4" height="30" rx="2" fill="${accent(i)}"/>${eyebrow(ox + 24, y + 22, kind, { color: accent(i) })}${txt(ox + 24, y + 42, text, { size: 13.5, color: C.text }).svg}</g>`
     })
     // The AI's response, then the measured result.
     const ay = oy + 3 * 68 + 12
     const aiK = show(s + 3.2, s + SCENE, { from: 'translateY(10px)' })
-    scene4 += `<g ${A(aiK)}${hov({ info: 'Synthase works in your workspace on molecule.dev: it proposes the change, verifies it, and ships it when you say so, or on its own if you let it.', href: 'https://www.molecule.dev' })}><path d="M${ox + 260} ${ay - 12} v10 M${ox + 255} ${ay - 7} l5 6 l5 -6" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${card(ox, ay + 4, 520, 96, { rx: 12, stroke: C.primary, sw: 1.5 })}${eyebrow(ox + 24, ay + 30, 'the AI, in your workspace')}${txt(ox + 24, ay + 54, 'Shortens onboarding to one step · fixes the export · adds CSV', { size: 13.5, color: C.strong, weight: 600 }).svg}${txt(ox + 24, ay + 76, 'Type-checked, tested and deployed — you approve, or let it run.', { size: 13, color: C.gray }).svg}</g>`
+    scene4 += `<g ${A(aiK)}${hov({ href: 'https://www.molecule.dev' })}><path d="M${ox + 260} ${ay - 12} v10 M${ox + 255} ${ay - 7} l5 6 l5 -6" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${card(ox, ay + 4, 520, 96, { rx: 12, stroke: C.primary, sw: 1.5 })}${eyebrow(ox + 24, ay + 30, 'the AI, in your workspace')}${txt(ox + 24, ay + 54, 'Shortens onboarding to one step · fixes the export · adds CSV', { size: 13.5, color: C.strong, weight: 600 }).svg}${txt(ox + 24, ay + 76, 'Type-checked, tested and deployed — you approve, or let it run.', { size: 13, color: C.gray }).svg}</g>`
     const resK = show(s + 4.4, s + SCENE, { from: 'translateY(8px)' })
-    scene4 += `<g ${A(resK)}>${chip(ox, ay + 120, 'next release: sign-ups up, export errors gone — measured, not guessed', { dot: C.green, size: 12.5, info: 'Every release is measured with the same instrumentation, so the loop closes on data rather than guesses.' }).svg}${txt(ox, ay + 172, 'Swap Mixpanel for PostHog or Sentry for another tracker: the instrumentation stays.', { size: 13, color: C.gray }).svg}</g>`
+    scene4 += `<g ${A(resK)}>${chip(ox, ay + 120, 'next release: sign-ups up, export errors gone — measured, not guessed', { dot: C.green, size: 12.5 }).svg}${txt(ox, ay + 172, 'Swap Mixpanel for PostHog or Sentry for another tracker: the instrumentation stays.', { size: 13, color: C.gray }).svg}</g>`
   }
 
   // ============================================================= SCENE 5
   let scene5 = caption(
     4,
-    'Why it pays off.',
-    'Full-stack, cross-platform apps built for the AI era — with the operational layer already in place.',
+    'The result is a faster, cheaper, higher-quality full-stack app for web, mobile and API that stays easy to maintain and scale, because every provider is swappable.',
   )
   {
     const s = 4 * SCENE
@@ -798,7 +790,7 @@ function build(theme, slide = null) {
       [
         '01',
         'Faster',
-        'Start from a working, tested app. 150 templates, 959 packages, live preview in the sandbox.',
+        'Start from a working, tested app: flagship templates, a growing catalog, a live preview.',
       ],
       [
         '02',
@@ -845,7 +837,7 @@ function build(theme, slide = null) {
         fadeOut: 0.3,
       })
       // `.m-step`: 16px radius, step number in primary with 0.1em tracking, 19px/600 title.
-      scene5 += `<g ${A(k)}${hov({ info: CARD_INFO[i][0], href: CARD_INFO[i][1] ?? undefined })}>${card(x, y, cw, chh, { rx: 16 })}${txt(x + 24, y + 38, num, { size: 14, weight: 700, tracking: 0.1, color: C.primary }).svg}`
+      scene5 += `<g ${A(k)}${hov({ href: CARD_INFO[i][1] ?? undefined })}>${card(x, y, cw, chh, { rx: 16 })}${txt(x + 24, y + 38, num, { size: 14, weight: 700, tracking: 0.1, color: C.primary }).svg}`
       const titleLines = title.split('\n')
       titleLines.forEach((t, ti) => {
         scene5 += txt(x + 24, y + 72 + ti * 24, t, { size: 19, weight: 600, color: C.strong }).svg
@@ -878,11 +870,11 @@ function build(theme, slide = null) {
     ]
     plats.forEach(([t, sub, info], i) => {
       const x = 60 + i * 366
-      scene5 += `<g${hov({ info })}>${card(x, py + 14, 350, 62, { rx: 12 })}<circle cx="${x + 20}" cy="${py + 45}" r="4" fill="${accent(i)}"/>${txt(x + 36, py + 40, t, { size: 14.5, weight: 600, color: C.strong }).svg}${txt(x + 36, py + 61, sub, { size: 13.5, color: C.gray }).svg}</g>`
+      scene5 += `<g>${card(x, py + 14, 350, 62, { rx: 12 })}<circle cx="${x + 20}" cy="${py + 45}" r="4" fill="${accent(i)}"/>${txt(x + 36, py + 40, t, { size: 14.5, weight: 600, color: C.strong }).svg}${txt(x + 36, py + 61, sub, { size: 13.5, color: C.gray }).svg}</g>`
     })
     scene5 += `</g>`
     const closeK = show(s + 3.2, s + SCENE, { fadeOut: 0.3 })
-    scene5 += `<g ${A(closeK)}${hov({ info: 'Try it: describe an app at www.molecule.dev.', href: 'https://www.molecule.dev' })}>${txt(60, 560, 'Plain TypeScript you own. Export the code, the database and your keys at any time.', { size: 15.5, weight: 600, color: C.strong }).svg}${txt(60, 585, 'Apache-2.0 packages on npm  ·  no lock-in  ·  works with any AI agent, editor or CI.', { size: 14, color: C.gray }).svg}${txt(1140, 585, 'www.molecule.dev', { size: 14, weight: 700, color: C.link, anchor: 'end' }).svg}</g>`
+    scene5 += `<g ${A(closeK)}${hov({ href: 'https://www.molecule.dev' })}>${txt(60, 560, 'Plain TypeScript you own. Export the code, the database and your keys at any time.', { size: 15.5, weight: 600, color: C.strong }).svg}${txt(60, 585, 'Apache-2.0 packages on npm  ·  no lock-in  ·  works with any AI agent, editor or CI.', { size: 14, color: C.gray }).svg}${txt(1140, 585, 'www.molecule.dev', { size: 14, weight: 700, color: C.link, anchor: 'end' }).svg}</g>`
   }
 
   // ================================================================= emit
@@ -891,7 +883,7 @@ function build(theme, slide = null) {
     .join('')
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-labelledby="t d">
 <title id="t">How Molecule works</title>
-<desc id="d">Describe an app; Synthase or the mlcl CLI composes it from 950+ open-source @molecule packages. Every provider sits behind a swappable bond, so the app never changes when a provider does. Auth, payments, i18n, analytics, monitoring, realtime, tests and CI are built in by default. Analytics, error tracking and feedback are built in; the AI reads what real users do, improves the app, ships and measures again. The result: faster, cheaper, higher-quality full-stack, cross-platform apps that are easier to maintain and scale.</desc>
+<desc id="d">Describe the app you want, and Synthase, the agent in the molecule.dev IDE, assembles a real TypeScript project from the open-source @molecule catalog. Every capability sits behind a core interface with swappable provider bonds, so changing the database means changing one import, never the application code. Auth, payments, i18n, analytics, monitoring, tests and CI ship wired on day one, so the integrations every real app needs are never rebuilt from scratch. Every app ships with analytics, error tracking and feedback built in, and the AI uses what real users do to improve it, ship the change and measure again. The result is a faster, cheaper, higher-quality full-stack app for web, mobile and API that stays easy to maintain and scale, because every provider is swappable.</desc>
 <defs>
   <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">${stops}</linearGradient>
   ${[...glyphDefs.values()].join('\n  ')}
@@ -945,12 +937,33 @@ writeFileSync(
         {
           id: 'describe',
           label: 'Describe',
-          title: 'Describe it. Synthase composes a real project.',
+          title:
+            'Describe the app you want, and Synthase, the agent in the molecule.dev IDE, assembles a real TypeScript project from the open-source @molecule catalog.',
         },
-        { id: 'bonds', label: 'Bonds', title: 'Swap the provider, not the app.' },
-        { id: 'built-in', label: 'Built in', title: 'The last 10% ships on day one.' },
-        { id: 'feedback', label: 'Feedback loop', title: 'Your app learns from its users.' },
-        { id: 'outcomes', label: 'Outcomes', title: 'Why it pays off.' },
+        {
+          id: 'bonds',
+          label: 'Bonds',
+          title:
+            'Every capability sits behind a core interface with swappable provider bonds, so changing the database means changing one import, never the application code.',
+        },
+        {
+          id: 'built-in',
+          label: 'Built in',
+          title:
+            'Auth, payments, i18n, analytics, monitoring, tests and CI ship wired on day one, so the integrations every real app needs are never rebuilt from scratch.',
+        },
+        {
+          id: 'feedback',
+          label: 'Feedback loop',
+          title:
+            'Every app ships with analytics, error tracking and feedback built in, and the AI uses what real users do to improve it, ship the change and measure again.',
+        },
+        {
+          id: 'outcomes',
+          label: 'Outcomes',
+          title:
+            'The result is a faster, cheaper, higher-quality full-stack app for web, mobile and API that stays easy to maintain and scale, because every provider is swappable.',
+        },
       ],
     },
     null,

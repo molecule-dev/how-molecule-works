@@ -5,27 +5,27 @@
     {
       "id": "describe",
       "label": "Describe",
-      "title": "Describe it. Synthase composes a real project."
+      "title": "Describe the app you want, and Synthase, the agent in the molecule.dev IDE, assembles a real TypeScript project from the open-source @molecule catalog."
     },
     {
       "id": "bonds",
       "label": "Bonds",
-      "title": "Swap the provider, not the app."
+      "title": "Every capability sits behind a core interface with swappable provider bonds, so changing the database means changing one import, never the application code."
     },
     {
       "id": "built-in",
       "label": "Built in",
-      "title": "The last 10% ships on day one."
+      "title": "Auth, payments, i18n, analytics, monitoring, tests and CI ship wired on day one, so the integrations every real app needs are never rebuilt from scratch."
     },
     {
       "id": "feedback",
       "label": "Feedback loop",
-      "title": "Your app learns from its users."
+      "title": "Every app ships with analytics, error tracking and feedback built in, and the AI uses what real users do to improve it, ship the change and measure again."
     },
     {
       "id": "outcomes",
       "label": "Outcomes",
-      "title": "Why it pays off."
+      "title": "The result is a faster, cheaper, higher-quality full-stack app for web, mobile and API that stays easy to maintain and scale, because every provider is swappable."
     }
   ]
 }

@@ -13,6 +13,9 @@ export interface Scene {
   title: string
 }
 
+/** How long a slide stays before autoplay moves on: the graphic's own scene length. */
+export const DWELL_MS: number = timeline.sceneSeconds * 1000
+
 /** The scene list — the generator's order, ids and titles. */
 export const SCENES: Scene[] = timeline.scenes
 
