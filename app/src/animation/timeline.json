@@ -1,0 +1,31 @@
+{
+  "loopSeconds": 30,
+  "sceneSeconds": 6,
+  "scenes": [
+    {
+      "id": "describe",
+      "label": "Describe",
+      "title": "Describe it. Synthase composes a real project."
+    },
+    {
+      "id": "bonds",
+      "label": "Bonds",
+      "title": "Swap the provider, not the app."
+    },
+    {
+      "id": "built-in",
+      "label": "Built in",
+      "title": "The last 10% ships on day one."
+    },
+    {
+      "id": "verify",
+      "label": "Verify loop",
+      "title": "Verified before it reaches you. Then it learns."
+    },
+    {
+      "id": "outcomes",
+      "label": "Outcomes",
+      "title": "Why it pays off."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "how-molecule-works",
+  "version": "0.0.1",
+  "private": true,
+  "description": "how-molecule-works-app — Built with Molecule.dev",
+  "workspaces": [
+    "app"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=app",
+    "build": "npm run build --workspace=app",
+    "preview": "npm run preview --workspace=app",
+    "test": "npm run test --workspace=app",
+    "typecheck": "npm run typecheck --workspace=app",
+    "lint": "npm run lint --workspace=app",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "9.1.7"
+  },
+  "keywords": [
+    "molecule",
+    "molecule.dev"
+  ],
+  "molecule": {
+    "generator": "mlcl",
+    "version": "2.0.0",
+    "docs": "https://www.molecule.dev/llms.txt"
+  }
+}

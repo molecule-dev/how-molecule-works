@@ -1,0 +1,55 @@
+# how-molecule-works
+
+how-molecule-works — built with Molecule.dev
+
+Built with **[Molecule.dev](https://molecule.dev)** — a composable `@molecule/*` package ecosystem for production TypeScript apps. Every capability sits behind a swappable **bond**: change PostgreSQL → MySQL, Mailgun → SES, or one OAuth provider for another by changing one wiring file, not rewriting your app.
+
+## Quick start
+
+```bash
+npm install
+# fill in credentials in api/.env and app/.env (see .env.example for the full list)
+npm run dev
+```
+
+## Architecture
+
+- **`api/`** — Express API (TypeScript, ESM)
+- **`app/`** — react frontend (Vite)
+- **`api/src/bonds/`** — provider wiring (the swappable layer — see AGENTS.md)
+- **`api/src/handlers/`** — domain API endpoints, one `.ts` per feature
+- **`api/migrations/`** — timestamped SQL migrations
+- **`app/src/pages/`** — UI pages
+- **`app/src/components/`** — UI components
+
+## Growing this project
+
+```bash
+# Find a capability:
+npx mlcl search payments
+
+# Add and wire it (installs + bonds + migrations + routes):
+npx mlcl add @molecule/api-payments-stripe --inject
+
+# Swap a provider:
+npx mlcl swap @molecule/api-database-mysql
+```
+
+Read any installed package's docs at `node_modules/@molecule/<name>/README.md`.
+
+## AI agents
+
+This project is agent-optimized — see `AGENTS.md` for the full conventions (bonds, ClassMap styling, handler patterns, migrations). To make any coding agent molecule-aware in any project: `npx mlcl agent init`.
+
+## Deploy
+
+Deploy to production with the same pipeline as the molecule.dev IDE:
+
+```bash
+npx mlcl login
+npx mlcl deploy --project <id> --follow
+```
+
+---
+
+*Built with [molecule.dev](https://molecule.dev) — scaffolded by [mlcl](https://www.npmjs.com/package/mlcl)*
