@@ -1,0 +1,339 @@
+{
+  "scenes": [
+    {
+      "id": "describe",
+      "label": "Describe",
+      "title": "Describe the app in the molecule.dev IDE, the mlcl CLI or any MCP agent, and Synthase assembles it from the open-source @molecule catalog.",
+      "links": [
+        {
+          "phrase": "@molecule catalog",
+          "href": "https://www.molecule.dev/packages"
+        }
+      ]
+    },
+    {
+      "id": "bonds",
+      "label": "Bonds",
+      "title": "Every provider sits behind a swappable bond, so changing the database is one import, not a rewrite.",
+      "links": []
+    },
+    {
+      "id": "built-in",
+      "label": "Built in",
+      "title": "Auth, payments, i18n, analytics, monitoring, tests and CI come wired in from day one.",
+      "links": []
+    },
+    {
+      "id": "feedback",
+      "label": "Feedback loop",
+      "title": "Built-in analytics, error tracking and feedback let the AI keep improving the app from real use.",
+      "links": []
+    },
+    {
+      "id": "outcomes",
+      "label": "Outcomes",
+      "title": "Faster, cheaper, higher-quality apps for web, mobile and API that stay easy to change.",
+      "links": []
+    }
+  ],
+  "prompt": {
+    "text": "An AI travel agent that books flights by voice, rebooks when they’re delayed, and splits the bill.",
+    "lines": [
+      "An AI travel agent that books",
+      "flights by voice, rebooks when",
+      "they’re delayed, and splits the bill."
+    ],
+    "href": "https://www.molecule.dev/#prompt=An%20AI%20travel%20agent%20that%20books%20flights%20by%20voice%2C%20rebooks%20when%20they%E2%80%99re%20delayed%2C%20and%20splits%20the%20bill."
+  },
+  "badges": [
+    {
+      "label": "molecule.dev IDE  ·  Synthase, the agent",
+      "href": "https://www.molecule.dev",
+      "mono": false
+    },
+    {
+      "label": "mlcl  ·  the CLI, and an MCP server for any agent",
+      "href": "https://github.com/molecule-dev/molecule#the-molecule-cli-mlcl-and-mcp-server",
+      "mono": true
+    }
+  ],
+  "howNote": "It picks packages from their generated docs and wires them like hand-written code.",
+  "catalog": {
+    "label": "@molecule/*  ·  the catalog",
+    "href": "https://www.molecule.dev/packages"
+  },
+  "nodes": [
+    {
+      "name": "api-ai",
+      "info": "One AI interface with tools and streaming; Anthropic, OpenAI, DeepSeek, Google and more as bonds.",
+      "href": "https://www.molecule.dev/packages/api-ai"
+    },
+    {
+      "name": "api-flights",
+      "info": "Flight search, booking and status behind one interface; providers as bonds.",
+      "href": "https://www.molecule.dev/packages/api-flights"
+    },
+    {
+      "name": "api-ai-speech",
+      "info": "Speech to text and text to speech, so the agent can listen and talk back.",
+      "href": "https://www.molecule.dev/packages/api-ai-speech"
+    },
+    {
+      "name": "api-payments",
+      "info": "Checkout, subscriptions and split bills; Stripe and others as bonds.",
+      "href": "https://www.molecule.dev/packages/api-payments"
+    },
+    {
+      "name": "api-sms",
+      "info": "Texts and rebooking alerts through Twilio and others.",
+      "href": "https://www.molecule.dev/packages/api-sms"
+    },
+    {
+      "name": "app-react",
+      "info": "The React binding: hooks for auth, i18n, theme and routing over framework-agnostic cores.",
+      "href": "https://www.molecule.dev/packages/app-react"
+    },
+    {
+      "name": "app-analytics",
+      "info": "Track once against the interface; wire Mixpanel, PostHog or your own.",
+      "href": "https://www.molecule.dev/packages/app-analytics"
+    },
+    {
+      "name": "app-react-native",
+      "info": "The same app on iOS and Android, with native device bonds.",
+      "href": "https://www.molecule.dev/packages/app-react-native"
+    }
+  ],
+  "done": "API + app  ·  compiles, tests pass, live preview",
+  "core": {
+    "name": "@molecule/api-database",
+    "href": "https://www.molecule.dev/packages/api-database",
+    "methods": "findMany · create · update …"
+  },
+  "dbBonds": [
+    {
+      "id": "postgresql",
+      "label": "PostgreSQL",
+      "name": "@molecule/api-database-postgresql",
+      "href": "https://www.molecule.dev/packages/api-database-postgresql",
+      "info": "The PostgreSQL bond. Change this one import and the application code above stays exactly as it is."
+    },
+    {
+      "id": "mysql",
+      "label": "MySQL",
+      "name": "@molecule/api-database-mysql",
+      "href": "https://www.molecule.dev/packages/api-database-mysql",
+      "info": "The MySQL bond. Change this one import and the application code above stays exactly as it is."
+    },
+    {
+      "id": "sqlite",
+      "label": "SQLite",
+      "name": "@molecule/api-database-sqlite",
+      "href": "https://www.molecule.dev/packages/api-database-sqlite",
+      "info": "The SQLite bond. Change this one import and the application code above stays exactly as it is."
+    },
+    {
+      "id": "d1",
+      "label": "Cloudflare D1",
+      "name": "@molecule/api-database-d1",
+      "href": "https://www.molecule.dev/packages/api-database-d1",
+      "info": "The Cloudflare D1 bond. Change this one import and the application code above stays exactly as it is."
+    }
+  ],
+  "categoriesLabel": "The same pattern for every category",
+  "categories": [
+    {
+      "name": "auth",
+      "href": "https://www.molecule.dev/packages#auth"
+    },
+    {
+      "name": "payments",
+      "href": "https://www.molecule.dev/packages#payments"
+    },
+    {
+      "name": "emails",
+      "href": "https://www.molecule.dev/packages#emails"
+    },
+    {
+      "name": "ai",
+      "href": "https://www.molecule.dev/packages#ai"
+    },
+    {
+      "name": "analytics",
+      "href": "https://www.molecule.dev/packages#analytics"
+    },
+    {
+      "name": "realtime",
+      "href": "https://www.molecule.dev/packages#realtime"
+    },
+    {
+      "name": "file-upload",
+      "href": "https://www.molecule.dev/packages#file-upload"
+    },
+    {
+      "name": "search",
+      "href": "https://www.molecule.dev/packages#search"
+    },
+    {
+      "name": "queue",
+      "href": "https://www.molecule.dev/packages#queue"
+    },
+    {
+      "name": "sms",
+      "href": "https://www.molecule.dev/packages#sms"
+    },
+    {
+      "name": "i18n",
+      "href": "https://www.molecule.dev/packages#i18n"
+    },
+    {
+      "name": "logger",
+      "href": "https://www.molecule.dev/packages#logger"
+    }
+  ],
+  "frameworksNote": "Frameworks and platforms swap the same way.",
+  "tiles": [
+    {
+      "label": "Auth & OAuth",
+      "info": "Sessions, passwords, two-factor and OAuth sign-in — @molecule/api-auth and app-auth."
+    },
+    {
+      "label": "Payments & billing",
+      "info": "Checkout, subscriptions and invoices — @molecule/api-payments, with Stripe as a bond."
+    },
+    {
+      "label": "Database & migrations",
+      "info": "A typed data store with migrations; PostgreSQL, MySQL, SQLite or D1 behind one interface."
+    },
+    {
+      "label": "i18n · dozens of languages",
+      "info": "Every UI string goes through t(); companion locale packages ship dozens of languages."
+    },
+    {
+      "label": "Analytics",
+      "info": "One tracking interface on both ends; Mixpanel, PostHog or your own provider."
+    },
+    {
+      "label": "Logging & monitoring",
+      "info": "Structured logging, health checks and uptime probes."
+    },
+    {
+      "label": "Error tracking",
+      "info": "Exceptions captured with context on API and app; the tracker is a swappable bond."
+    },
+    {
+      "label": "Realtime",
+      "info": "Live updates over WebSockets or server-sent events behind one interface."
+    },
+    {
+      "label": "Uploads & media",
+      "info": "File uploads to S3-compatible storage or disk, with image handling."
+    },
+    {
+      "label": "Push notifications",
+      "info": "Web push and mobile push through one bond."
+    },
+    {
+      "label": "Search",
+      "info": "Full-text search; Meilisearch and others as bonds."
+    },
+    {
+      "label": "Feature flags",
+      "info": "Flags and gradual rollouts, evaluated on both ends."
+    },
+    {
+      "label": "Tests: unit, E2E",
+      "info": "Unit, integration and Playwright end-to-end tests are scaffolded with the app."
+    },
+    {
+      "label": "CI/CD & deploys",
+      "info": "GitHub or GitLab workflows, and one-click deploys from molecule.dev."
+    },
+    {
+      "label": "Accessibility (a11y)",
+      "info": "Semantic components, focus handling and contrast built into the UI kit."
+    },
+    {
+      "label": "AGENTS.md for AI agents",
+      "info": "Every project ships an AGENTS.md that teaches any coding agent its conventions."
+    }
+  ],
+  "tilesNote": "Docs are generated from source, so an agent wires each package right the first time.",
+  "loopSteps": [
+    "people use the app",
+    "analytics · errors · feedback",
+    "the AI reads the signals",
+    "improves · ships · measures"
+  ],
+  "loopCenter": [
+    "every release",
+    "a little better"
+  ],
+  "signalsLabel": "from the running app",
+  "signals": [
+    {
+      "kind": "analytics",
+      "text": "Sign-ups stall on the second step of onboarding"
+    },
+    {
+      "kind": "error tracking",
+      "text": "Invoice export throws for 14 users this week"
+    },
+    {
+      "kind": "feedback",
+      "text": "“Can I get this as CSV?” — asked nine times"
+    }
+  ],
+  "ai": {
+    "label": "the AI, in your workspace",
+    "headline": "Shortens onboarding to one step · fixes the export · adds CSV",
+    "sub": "Type-checked, tested and deployed — you approve, or let it run.",
+    "href": "https://www.molecule.dev"
+  },
+  "loopResult": "next release: sign-ups up, export errors gone — measured, not guessed",
+  "loopNote": "Swap Mixpanel for PostHog; the instrumentation stays.",
+  "outcomes": [
+    {
+      "num": "01",
+      "title": "Faster",
+      "body": "Start from a working, tested app. Existing and custom apps gain the same speed by integrating the packages and the architecture."
+    },
+    {
+      "num": "02",
+      "title": "Cheaper",
+      "body": "Far fewer tokens: the AI wires tested packages instead of generating the same code again and again."
+    },
+    {
+      "num": "03",
+      "title": "Higher quality",
+      "body": "Type-checked, linted and tested. Polished functionality that already covers the unexpected edge cases."
+    },
+    {
+      "num": "04",
+      "title": "Easier to maintain & scale",
+      "svgTitle": "Easier to maintain\n& scale",
+      "body": "One consistent, decoupled architecture with tests, migrations, monitoring and docs built in, so the app stays easy to change and grow."
+    }
+  ],
+  "platformsLabel": "Cross-platform from one codebase",
+  "platforms": [
+    {
+      "name": "Web",
+      "sub": "Any modern web framework"
+    },
+    {
+      "name": "Mobile",
+      "sub": "Native iOS and Android from the same code"
+    },
+    {
+      "name": "API",
+      "sub": "Any framework, database or host"
+    }
+  ],
+  "closing": {
+    "strong": "Plain code you own. Export it, with its database and keys, at any time.",
+    "sub": "Apache-2.0  ·  no lock-in  ·  any AI agent, editor or CI.",
+    "site": "www.molecule.dev",
+    "href": "https://www.molecule.dev"
+  }
+}

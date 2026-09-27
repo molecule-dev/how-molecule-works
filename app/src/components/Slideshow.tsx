@@ -1,5 +1,5 @@
 import type React from 'react'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useTheme, useTranslation } from '@molecule/app-react'
 import { getClassMap } from '@molecule/app-ui'
@@ -22,17 +22,46 @@ import s4d from '../animation/slides/slide-4-dark.svg?raw'
 import s4l from '../animation/slides/slide-4-light.svg?raw'
 import s5d from '../animation/slides/slide-5-dark.svg?raw'
 import s5l from '../animation/slides/slide-5-light.svg?raw'
+import { PANEL_CSS, SlidePanel } from './SlidePanels.js'
 
 const SLIDES = {
   dark: [s1d, s2d, s3d, s4d, s5d],
   light: [s1l, s2l, s3l, s4l, s5l],
 }
 
-/** The site's own colours (Landing.css tokens) for the tooltip. */
+/**
+ * The site's own colours (Landing.css tokens), set as `--hmw-*` variables on the
+ * deck so the HTML panels and the tooltip match the graphic in either theme.
+ */
 const TONES = {
-  dark: { layer: '#151515', border: '#292929', text: '#e0e0e0' },
-  light: { layer: '#f4f4f4', border: '#d0d0d0', text: '#1a1a1a' },
+  dark: {
+    bg: '#0e0e0e',
+    layer: '#151515',
+    border: '#292929',
+    text: '#e0e0e0',
+    gray: '#bebebe',
+    strong: '#ffffff',
+    primary: '#4070e0',
+    link: '#7ea5ff',
+    green: '#5bb98c',
+    acc: ['#7ea5ff', '#e4a6b9', '#edc7a7', '#acc4fd'],
+  },
+  light: {
+    bg: '#eaeaea',
+    layer: '#f4f4f4',
+    border: '#d0d0d0',
+    text: '#1a1a1a',
+    gray: '#555555',
+    strong: '#000000',
+    primary: '#3060c0',
+    link: '#2451c9',
+    green: '#1e7a00',
+    acc: ['#185eff', '#cc587b', '#dc9152', '#487dfb'],
+  },
 }
+
+/** Below this width the 1200px graphic is too small to read; the deck shows HTML panels instead. */
+const NARROW = '(max-width: 859px)'
 
 /**
  * Hover affordances for the artwork: what has info brightens and shows a
@@ -53,6 +82,17 @@ const STAGE_CSS = `
 .hmw-enter-next{animation:hmw-in-next .42s cubic-bezier(.2,.8,.2,1) both}
 .hmw-enter-prev{animation:hmw-in-prev .42s cubic-bezier(.2,.8,.2,1) both}
 @media (prefers-reduced-motion: reduce){.hmw-enter-next,.hmw-enter-prev{animation:none}}
+.hmw-index{display:flex;align-items:center;gap:6px;margin-top:12px}
+.hmw-index button{appearance:none;border:0;background:none;padding:0;margin:0;color:var(--hmw-gray);font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hmw-index [data-nav]{flex:none;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%}
+.hmw-index [data-nav] svg{width:14px;height:14px}
+.hmw-index [data-nav]:hover,.hmw-index [data-nav]:focus-visible{color:var(--hmw-strong);outline:none}
+.hmw-index [data-scene]{flex:1 1 0;min-width:0;display:grid;gap:8px;padding:10px 0;opacity:.45;transition:opacity .18s ease}
+.hmw-index [data-scene].is-on,.hmw-index [data-scene]:hover{opacity:1}
+.hmw-index .hmw-bar{display:block;height:3px;border-radius:1.5px;background:var(--hmw-border);overflow:hidden}
+.hmw-index .hmw-progress{display:block;height:100%;background:var(--hmw-link);transform-origin:left center;animation:hmw-fill var(--hmw-dwell,6s) linear forwards}
+@keyframes hmw-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hmw-index .hmw-lab{font-size:11px;font-weight:600;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 `
 
 /**
@@ -104,6 +144,8 @@ export function Slideshow() {
   const [auto, setAuto] = useState(true)
   const [paused, setPaused] = useState(false)
   const [tip, setTip] = useState<{ text: string; x: number; y: number } | null>(null)
+  // Server-rendered as the graphic; a phone switches to the panels before first paint.
+  const [narrow, setNarrow] = useState(false)
   const remainingRef = useRef(DWELL_MS)
   const stageRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<HTMLDivElement>(null)
@@ -127,6 +169,14 @@ export function Slideshow() {
   // Reduced motion: no autoplay.
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setAuto(false)
+  }, [])
+
+  useLayoutEffect(() => {
+    const mq = window.matchMedia(NARROW)
+    const apply = () => setNarrow(mq.matches)
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
   }, [])
 
   // Autoplay: advance after the dwell; a pause keeps the remaining time.
@@ -198,15 +248,16 @@ export function Slideshow() {
       setTip({ text: target.dataset.info ?? '', x, y })
     }
     const onLeave = () => setTip(null)
-    stage.addEventListener('click', onClick)
-    stage.addEventListener('pointermove', onMove)
-    stage.addEventListener('pointerleave', onLeave)
+    // On the frame, not the stage: the HTML index row sits outside the stage.
+    frame.addEventListener('click', onClick)
+    frame.addEventListener('pointermove', onMove)
+    frame.addEventListener('pointerleave', onLeave)
     return () => {
-      stage.removeEventListener('click', onClick)
-      stage.removeEventListener('pointermove', onMove)
-      stage.removeEventListener('pointerleave', onLeave)
+      frame.removeEventListener('click', onClick)
+      frame.removeEventListener('pointermove', onMove)
+      frame.removeEventListener('pointerleave', onLeave)
     }
-  }, [html, go, index])
+  }, [html, go, index, narrow])
 
   // Keys: arrows, digits, Home/End — unless something editable has focus.
   useEffect(() => {
@@ -277,7 +328,7 @@ export function Slideshow() {
       })}
       style={{ maxWidth: 1200, margin: '0 auto' }}
     >
-      <style>{STAGE_CSS}</style>
+      <style>{STAGE_CSS + PANEL_CSS}</style>
       <div
         ref={frameRef}
         role="group"
@@ -295,13 +346,92 @@ export function Slideshow() {
         onMouseLeave={() => setPaused(false)}
         className={!auto ? 'hmw-stopped' : paused ? 'hmw-paused' : undefined}
         style={{
+          ['--hmw-bg' as string]: tone.bg,
+          ['--hmw-layer' as string]: tone.layer,
+          ['--hmw-border' as string]: tone.border,
+          ['--hmw-text' as string]: tone.text,
+          ['--hmw-gray' as string]: tone.gray,
+          ['--hmw-strong' as string]: tone.strong,
+          ['--hmw-primary' as string]: tone.primary,
+          ['--hmw-link' as string]: tone.link,
+          ['--hmw-green' as string]: tone.green,
+          ['--hmw-acc1' as string]: tone.acc[0],
+          ['--hmw-acc2' as string]: tone.acc[1],
+          ['--hmw-acc3' as string]: tone.acc[2],
+          ['--hmw-acc4' as string]: tone.acc[3],
+          ['--hmw-dwell' as string]: `${DWELL_MS}ms`,
           position: 'relative',
           touchAction: 'pan-y',
           borderRadius: 16,
           boxShadow: '0 30px 80px -40px rgba(0,0,0,.6)',
         }}
       >
-        <Slide key={`${theme}-${index}`} html={html} stageRef={stageRef} enter={enter} />
+        {narrow ? (
+          <div
+            key={`panel-${index}`}
+            ref={stageRef}
+            className={`hmw-stage hmw-enter-${enter}`}
+            data-mol-id="slide-stage"
+          >
+            <SlidePanel index={index} />
+          </div>
+        ) : (
+          <Slide key={`${theme}-${index}`} html={html} stageRef={stageRef} enter={enter} />
+        )}
+        {narrow ? (
+          <div className="hmw-index" data-mol-id="slide-index">
+            <button
+              type="button"
+              data-nav="prev"
+              aria-label={t('slides.prev', undefined, { defaultValue: 'Previous slide' })}
+            >
+              <svg viewBox="0 0 14 14" aria-hidden="true">
+                <path
+                  d="M9 2 4 7l5 5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            {SCENES.map((sc, i) => (
+              <button
+                type="button"
+                key={sc.id}
+                data-scene={i}
+                className={i === index ? 'is-on' : undefined}
+                aria-current={i === index ? 'true' : undefined}
+                aria-label={`${i + 1} ${sc.label}`}
+              >
+                <span className="hmw-bar">
+                  {i === index ? <span className="hmw-progress" /> : null}
+                </span>
+                <span className="hmw-lab">
+                  {i + 1}
+                  {i === index ? `  ${sc.label}` : ''}
+                </span>
+              </button>
+            ))}
+            <button
+              type="button"
+              data-nav="next"
+              aria-label={t('slides.next', undefined, { defaultValue: 'Next slide' })}
+            >
+              <svg viewBox="0 0 14 14" aria-hidden="true">
+                <path
+                  d="m5 2 5 5-5 5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        ) : null}
 
         {tip ? (
           <div

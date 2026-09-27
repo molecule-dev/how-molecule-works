@@ -48,6 +48,8 @@ import { fileURLToPath } from 'node:url'
 
 import * as fontkit from 'fontkit'
 
+import * as X from './animation-content.mjs'
+
 const HERE = dirname(fileURLToPath(import.meta.url))
 const OUT_SRC = join(HERE, '..', 'src', 'animation')
 const OUT_PUBLIC = join(HERE, '..', 'public')
@@ -354,7 +356,7 @@ function build(theme, slide = null) {
   const header = `<g${hov({ href: 'https://www.molecule.dev' })}>${hit(52, 30, tw('How Molecule works', 22, 700) + 70, 48)}${logo}${txt(112, 68, 'How Molecule works', { size: 22, weight: 700, color: C.strong }).svg}</g><g${hov({ href: 'https://www.molecule.dev' })}>${hit(1140 - wmW - 8, 50, wmW + 16, 26)}${txt(1140, 68, 'molecule.dev', { size: 15, weight: 500, color: C.link, anchor: 'end' }).svg}</g>`
 
   // Scene index along the bottom: five segments, the live one lit.
-  const SCENES = ['Describe', 'Bonds', 'Built in', 'Feedback loop', 'Outcomes']
+  const SCENES = X.SCENES.map((sc) => sc.label)
   let footer = ''
   if (SLIDE) keyframes.push('@keyframes hmwp{from{transform:scaleX(0)}to{transform:scaleX(1)}}')
   {
@@ -388,18 +390,10 @@ function build(theme, slide = null) {
   }
 
   // ============================================================= SCENE 1
-  let scene1 = caption(
-    0,
-    'Describe the app in the molecule.dev IDE, the mlcl CLI or any MCP agent, and Synthase assembles it from the open-source @molecule catalog.',
-    [{ phrase: '@molecule catalog', href: 'https://www.molecule.dev/packages' }],
-  )
+  let scene1 = caption(0, X.SCENES[0].title, X.SCENES[0].links)
   {
     const s = 0
-    const LINES = [
-      'An AI travel agent that books',
-      'flights by voice, rebooks when',
-      'they’re delayed, and splits the bill.',
-    ]
+    const LINES = X.PROMPT_LINES
     const prompt = LINES.join(' ')
     const px = 60
     const py = 210
@@ -408,7 +402,7 @@ function build(theme, slide = null) {
     const promptK = show(s + 0.2, s + SCENE, { from: 'translateY(12px)' })
     // The landing prompt form: input background, 8px radius, a 2px gradient ring.
     // Clicking the prompt opens molecule.dev with this prompt prefilled and selected.
-    scene1 += `<g ${A(promptK)}${hov({ href: `https://www.molecule.dev/#prompt=${encodeURIComponent(prompt)}` })}><rect x="${px - 2}" y="${py - 2}" width="${pw + 4}" height="${ph + 4}" rx="10" fill="url(#ring)"/><rect x="${px}" y="${py}" width="${pw}" height="${ph}" rx="8" fill="${C.input}"/>${eyebrow(px + 20, py + 30, 'You', { color: C.faint })}`
+    scene1 += `<g ${A(promptK)}${hov({ href: X.PROMPT_HREF })}><rect x="${px - 2}" y="${py - 2}" width="${pw + 4}" height="${ph + 4}" rx="10" fill="url(#ring)"/><rect x="${px}" y="${py}" width="${pw}" height="${ph}" rx="8" fill="${C.input}"/>${eyebrow(px + 20, py + 30, 'You', { color: C.faint })}`
     // Typing: each glyph fades in at its own time; the cursor steps along with it.
     LINES.forEach((line, li) => {
       scene1 += txt(px + 20, py + 62 + li * 24, line, {
@@ -463,23 +457,20 @@ function build(theme, slide = null) {
 
     // Synthase / mlcl badges under the prompt.
     const badgeK = show(s + 2.8, s + SCENE)
-    const b1 = chip(px, 376, 'molecule.dev IDE  ·  Synthase, the agent', {
-      href: 'https://www.molecule.dev',
+    const b1 = chip(px, 376, X.BADGES[0].label, {
+      href: X.BADGES[0].href,
       dot: accent(1),
       size: 13,
+      isMono: X.BADGES[0].mono,
     })
-    const b2 = chip(px, 418, 'mlcl  ·  the CLI, and an MCP server for any agent', {
-      href: 'https://github.com/molecule-dev/molecule#the-molecule-cli-mlcl-and-mcp-server',
+    const b2 = chip(px, 418, X.BADGES[1].label, {
+      href: X.BADGES[1].href,
       dot: accent(0),
       size: 13,
-      isMono: true,
+      isMono: X.BADGES[1].mono,
     })
     scene1 += `<g ${A(badgeK)}>${b1.svg}${b2.svg}`
-    wrap(
-      'It picks packages from their generated docs and wires them like hand-written code.',
-      400,
-      14,
-    ).forEach((l, i) => {
+    wrap(X.HOW_NOTE, 400, 14).forEach((l, i) => {
       scene1 += txt(px, 486 + i * 22, l, { size: 14, color: C.gray }).svg
     })
     scene1 += `</g>`
@@ -487,7 +478,7 @@ function build(theme, slide = null) {
     // Catalog column.
     const catX = 520
     const catK = show(s + 0.4, s + SCENE, { from: 'translateX(-8px)' })
-    let cat = `<g ${A(catK)}${hov({ href: 'https://www.molecule.dev/packages' })}>${hit(catX - 4, 198, tw('@MOLECULE/*  ·  THE CATALOG', 13, 600, 0.14) + 8, 24)}${eyebrow(catX, 214, '@molecule/*  ·  the catalog')}`
+    let cat = `<g ${A(catK)}${hov({ href: X.CATALOG_HREF })}>${hit(catX - 4, 198, tw(X.CATALOG_LABEL.toUpperCase(), 13, 600, 0.14) + 8, 24)}${eyebrow(catX, 214, X.CATALOG_LABEL)}`
     for (let i = 0; i < 11; i++)
       cat += `<rect x="${catX}" y="${234 + i * 30}" width="${90 + ((i * 37) % 60)}" height="16" rx="5" fill="${C.layer}" stroke="${C.border}"/>`
     scene1 += cat + `</g>`
@@ -496,28 +487,8 @@ function build(theme, slide = null) {
     const cx = 930
     const cy = 420
     const r = 165
-    const NODE_INFO = {
-      'api-ai':
-        'One AI interface with tools and streaming; Anthropic, OpenAI, DeepSeek, Google and more as bonds.',
-      'api-flights': 'Flight search, booking and status behind one interface; providers as bonds.',
-      'api-ai-speech': 'Speech to text and text to speech, so the agent can listen and talk back.',
-      'api-payments': 'Checkout, subscriptions and split bills; Stripe and others as bonds.',
-      'api-sms': 'Texts and rebooking alerts through Twilio and others.',
-      'app-react':
-        'The React binding: hooks for auth, i18n, theme and routing over framework-agnostic cores.',
-      'app-analytics': 'Track once against the interface; wire Mixpanel, PostHog or your own.',
-      'app-react-native': 'The same app on iOS and Android, with native device bonds.',
-    }
-    const nodes = [
-      'api-ai',
-      'api-flights',
-      'api-ai-speech',
-      'api-payments',
-      'api-sms',
-      'app-react',
-      'app-analytics',
-      'app-react-native',
-    ]
+    const NODE_INFO = Object.fromEntries(X.NODES.map((n) => [n.name, n.info]))
+    const nodes = X.NODES.map((n) => n.name)
     const centerK = show(s + 2.9, s + SCENE, { from: 'scale(0.6)', fadeIn: 0.5 })
     scene1 += `<g ${AT(centerK)}><circle cx="${cx}" cy="${cy}" r="40" fill="${C.layer}" stroke="${C.primary}" stroke-width="2"/>${txt(cx, cy - 2, 'your', { size: 14, weight: 700, color: C.strong, anchor: 'middle' }).svg}${txt(cx, cy + 15, 'app', { size: 14, weight: 700, color: C.strong, anchor: 'middle' }).svg}</g>`
     nodes.forEach((label, i) => {
@@ -552,14 +523,11 @@ function build(theme, slide = null) {
       scene1 += `<g ${AT(k)}>${c.svg}</g>`
     })
     const doneK = show(s + 5.3, s + SCENE, { fadeIn: 0.3 })
-    scene1 += `<g ${A(doneK)}>${chip(cx, cy + r + 46, 'API + app  ·  compiles, tests pass, live preview', { dot: C.green, anchor: 'middle', size: 12.5 }).svg}</g>`
+    scene1 += `<g ${A(doneK)}>${chip(cx, cy + r + 46, X.DONE, { dot: C.green, anchor: 'middle', size: 12.5 }).svg}</g>`
   }
 
   // ============================================================= SCENE 2
-  let scene2 = caption(
-    1,
-    'Every provider sits behind a swappable bond, so changing the database is one import, not a rewrite.',
-  )
+  let scene2 = caption(1, X.SCENES[1].title, X.SCENES[1].links)
   {
     const s = SCENE
     const cx0 = 60
@@ -596,16 +564,11 @@ function build(theme, slide = null) {
     scene2 += `<g ${A(bondsK)}>${codeBlock(cx0, by, 560, 168, 'api/src/bonds.ts', [['// the one wiring file', CODE.dim], `import { pool, store } from`, '', `setPool(pool); setStore(store)`])}</g>`
 
     // Right: the core interface, the bond slot, provider chips snapping in.
-    const providers = [
-      ['postgresql', 'PostgreSQL'],
-      ['mysql', 'MySQL'],
-      ['sqlite', 'SQLite'],
-      ['d1', 'Cloudflare D1'],
-    ]
+    const providers = X.DB_BONDS.map((b) => [b.id, b.label])
     const sx = 700
     const sy = 205
     const coreK = show(s + 0.4, s + SCENE, { from: 'translateY(12px)' })
-    scene2 += `<g ${A(coreK)}${hov({ href: PKG('api-database') })}>${card(sx, sy, 440, 92, { stroke: C.primary, sw: 1.5 })}${eyebrow(sx + 24, sy + 34, 'core interface')}${mono(sx + 24, sy + 64, '@molecule/api-database', { size: 16, color: C.strong }).svg}${txt(sx + 416, sy + 64, 'findMany · create · update …', { size: 12.5, color: C.gray, anchor: 'end' }).svg}
+    scene2 += `<g ${A(coreK)}${hov({ href: X.CORE.href })}>${card(sx, sy, 440, 92, { stroke: C.primary, sw: 1.5 })}${eyebrow(sx + 24, sy + 34, 'core interface')}${mono(sx + 24, sy + 64, X.CORE.name, { size: 16, color: C.strong }).svg}${txt(sx + 416, sy + 64, X.CORE.methods, { size: 12.5, color: C.gray, anchor: 'end' }).svg}
     <path d="M${sx + 200} ${sy + 92} v22 h40 v-22" fill="none" stroke="${C.primary}" stroke-width="1.5" stroke-dasharray="4 4"/>
     ${eyebrow(sx + 24, sy + 130, 'bond (provider)')}
     <rect x="${sx}" y="${sy + 142}" width="440" height="62" rx="14" fill="none" stroke="${C.border}" stroke-dasharray="6 5"/></g>`
@@ -639,28 +602,15 @@ function build(theme, slide = null) {
         isMono: true,
         size: 13,
         stroke: color,
-        info: `The ${label} bond. Change this one import and the application code above stays exactly as it is.`,
-        href: PKG(`api-database-${id}`),
+        info: X.DB_BONDS[i].info,
+        href: X.DB_BONDS[i].href,
       })
       scene2 += `<g ${SLIDE ? `class="${k}"` : A(k)}>${c.svg}${txt(sx + 416, sy + 178, label, { size: 13, weight: 600, color, anchor: 'end' }).svg}${mono(cx0 + 22, by + 62 + 2 * 28 + 5, `  '@molecule/api-database-${id}'`, { size: 14, color: CODE.add }).svg}</g>`
     })
 
     const catsK = show(s + 1.6, s + SCENE, { from: 'translateY(10px)' })
-    const cats = [
-      'auth',
-      'payments',
-      'emails',
-      'ai',
-      'analytics',
-      'realtime',
-      'file-upload',
-      'search',
-      'queue',
-      'sms',
-      'i18n',
-      'logger',
-    ]
-    let row = `<g ${A(catsK)}><g${hov({ href: 'https://www.molecule.dev/packages' })}><rect x="${sx - 4}" y="${sy + 234}" width="${tw('THE SAME PATTERN FOR EVERY CATEGORY', 13, 600, 0.14) + 8}" height="24" fill="transparent"/>${eyebrow(sx, sy + 250, 'The same pattern for every category')}</g>`
+    const cats = X.CATEGORIES.map((c) => c.name)
+    let row = `<g ${A(catsK)}><g${hov({ href: X.CATALOG_HREF })}><rect x="${sx - 4}" y="${sy + 234}" width="${tw(X.CATEGORIES_LABEL.toUpperCase(), 13, 600, 0.14) + 8}" height="24" fill="transparent"/>${eyebrow(sx, sy + 250, X.CATEGORIES_LABEL)}</g>`
     let xx = sx
     let yy = sy + 266
     cats.forEach((c) => {
@@ -672,65 +622,24 @@ function build(theme, slide = null) {
         size: 12.5,
         isMono: true,
         color: C.gray,
-        href: `https://www.molecule.dev/packages#${c}`,
+        href: X.CATEGORIES.find((x) => x.name === c).href,
       })
       row += ch.svg
       xx += ch.w + 8
     })
-    wrap(
-      'Frameworks swap the same way: React, Vue, Svelte, Solid, Angular, React Native.',
-      440,
-      14,
-    ).forEach((l, i) => {
+    wrap(X.FRAMEWORKS_NOTE, 440, 14).forEach((l, i) => {
       row += txt(sx, yy + 62 + i * 22, l, { size: 14, color: C.gray }).svg
     })
     scene2 += row + `</g>`
   }
 
   // ============================================================= SCENE 3
-  let scene3 = caption(
-    2,
-    'Auth, payments, i18n, analytics, monitoring, tests and CI come wired in from day one.',
-  )
+  let scene3 = caption(2, X.SCENES[2].title, X.SCENES[2].links)
   {
     const s = 2 * SCENE
     // The site's capability list: 12px radius cards, 8px accent dot cycling four colors.
-    const tiles = [
-      'Auth & OAuth',
-      'Payments & billing',
-      'Database & migrations',
-      'i18n · dozens of languages',
-      'Analytics & telemetry',
-      'Logging & monitoring',
-      'Error tracking',
-      'Realtime',
-      'Uploads & media',
-      'Push notifications',
-      'Search',
-      'Feature flags',
-      'Tests: unit, E2E',
-      'CI/CD & deploys',
-      'Accessibility (a11y)',
-      'AGENTS.md for AI agents',
-    ]
-    const TILE_INFO = [
-      'Sessions, passwords, two-factor and OAuth sign-in — @molecule/api-auth and app-auth.',
-      'Checkout, subscriptions and invoices — @molecule/api-payments, with Stripe as a bond.',
-      'A typed data store with migrations; PostgreSQL, MySQL, SQLite or D1 behind one interface.',
-      'Every UI string goes through t(); companion locale packages ship dozens of languages.',
-      'One tracking interface on both ends; Mixpanel, PostHog or your own provider.',
-      'Structured logging, health checks and uptime probes.',
-      'Exceptions captured with context on API and app; the tracker is a swappable bond.',
-      'Live updates over WebSockets or server-sent events behind one interface.',
-      'File uploads to S3-compatible storage or disk, with image handling.',
-      'Web push and mobile push through one bond.',
-      'Full-text search; Meilisearch and others as bonds.',
-      'Flags and gradual rollouts, evaluated on both ends.',
-      'Unit, integration and Playwright end-to-end tests are scaffolded with the app.',
-      'GitHub or GitLab workflows, and one-click deploys from molecule.dev.',
-      'Semantic components, focus handling and contrast built into the UI kit.',
-      'Every project ships an AGENTS.md that teaches any coding agent its conventions.',
-    ]
+    const tiles = X.TILES.map((t) => t.label)
+    const TILE_INFO = X.TILES.map((t) => t.info)
     const cols = 4
     const tw0 = 258
     const th = 74
@@ -743,26 +652,18 @@ function build(theme, slide = null) {
       scene3 += `<g ${AT(k)}${hov({ info: TILE_INFO[i] })}>${card(x, y, tw0, th, { rx: 12 })}<circle cx="${x + 20}" cy="${y + th / 2}" r="4" fill="${accent(i)}"/>${txt(x + 36, y + th / 2 + 5.5, label, { size: 15.5, weight: 500, color: C.strong }).svg}<g ${AT(checkK)}><circle cx="${x + tw0 - 24}" cy="${y + th / 2}" r="10" fill="${C.green}" fill-opacity="0.16" stroke="${C.green}"/><path d="M${x + tw0 - 29} ${y + th / 2} l3.5 3.5 l6.5 -7" fill="none" stroke="${C.green}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></g>`
     })
     const noteK = show(s + 3.4, s + SCENE)
-    scene3 += `<g ${A(noteK)}>${txt(60, 588, 'Docs are generated from source, so an agent wires each package right the first time.', { size: 14, color: C.gray }).svg}</g>`
+    scene3 += `<g ${A(noteK)}>${txt(60, 588, X.TILES_NOTE, { size: 14, color: C.gray }).svg}</g>`
   }
 
   // ============================================================= SCENE 4
   // The app's own loop: built-in telemetry → the AI → a better release → measure.
-  let scene4 = caption(
-    3,
-    'Built-in analytics, error tracking and feedback let the AI keep improving the app from real use.',
-  )
+  let scene4 = caption(3, X.SCENES[3].title, X.SCENES[3].links)
   {
     const s = 3 * SCENE
     const lcx = 300
     const lcy = 420
     const lr = 118
-    const steps = [
-      'people use the app',
-      'analytics · errors · feedback',
-      'the AI reads the signals',
-      'improves · ships · measures',
-    ]
+    const steps = X.LOOP_STEPS
     const ringK = show(s + 0.2, s + SCENE, { from: 'scale(0.9)', fadeIn: 0.5 })
     scene4 += `<g ${AT(ringK)}><circle cx="${lcx}" cy="${lcy}" r="${lr}" fill="none" stroke="${C.border}" stroke-width="2"/>`
     for (let i = 0; i < 4; i++) {
@@ -793,7 +694,7 @@ function build(theme, slide = null) {
         stroke: color,
       }).svg
     })
-    scene4 += `${txt(lcx, lcy - 4, 'every release', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}${txt(lcx, lcy + 16, 'a little better', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}</g>`
+    scene4 += `${txt(lcx, lcy - 4, X.LOOP_CENTER[0], { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}${txt(lcx, lcy + 16, X.LOOP_CENTER[1], { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}</g>`
     const spin = `r${++idCounter}`
     if (SLIDE)
       keyframes.push(`@keyframes ${spin}{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}`)
@@ -808,12 +709,8 @@ function build(theme, slide = null) {
     // Right: signals arriving from the running app, and what the AI does with them.
     const ox = 620
     const oy = 200
-    const signals = [
-      ['analytics', 'Sign-ups stall on the second step of onboarding'],
-      ['error tracking', 'Invoice export throws for 14 users this week'],
-      ['feedback', '“Can I get this as CSV?” — asked nine times'],
-    ]
-    scene4 += `<g ${A(show(s + 1.2, s + SCENE))}>${eyebrow(ox, oy - 14, 'from the running app')}</g>`
+    const signals = X.SIGNALS.map((sg) => [sg.kind, sg.text])
+    scene4 += `<g ${A(show(s + 1.2, s + SCENE))}>${eyebrow(ox, oy - 14, X.SIGNALS_LABEL)}</g>`
     signals.forEach(([kind, text], i) => {
       const y = oy + i * 68
       const k = show(s + 1.4 + i * 0.5, s + SCENE, { from: 'translateX(14px)' })
@@ -822,26 +719,18 @@ function build(theme, slide = null) {
     // The AI's response, then the measured result.
     const ay = oy + 3 * 68 + 12
     const aiK = show(s + 3.2, s + SCENE, { from: 'translateY(10px)' })
-    scene4 += `<g ${A(aiK)}${hov({ href: 'https://www.molecule.dev' })}><path d="M${ox + 260} ${ay - 12} v10 M${ox + 255} ${ay - 7} l5 6 l5 -6" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${card(ox, ay + 4, 520, 96, { rx: 12, stroke: C.primary, sw: 1.5 })}${eyebrow(ox + 24, ay + 30, 'the AI, in your workspace')}${txt(ox + 24, ay + 54, 'Shortens onboarding to one step · fixes the export · adds CSV', { size: 13.5, color: C.strong, weight: 600 }).svg}${txt(ox + 24, ay + 76, 'Type-checked, tested and deployed — you approve, or let it run.', { size: 13, color: C.gray }).svg}</g>`
+    scene4 += `<g ${A(aiK)}${hov({ href: X.AI.href })}><path d="M${ox + 260} ${ay - 12} v10 M${ox + 255} ${ay - 7} l5 6 l5 -6" fill="none" stroke="${C.gray}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${card(ox, ay + 4, 520, 96, { rx: 12, stroke: C.primary, sw: 1.5 })}${eyebrow(ox + 24, ay + 30, X.AI.label)}${txt(ox + 24, ay + 54, X.AI.headline, { size: 13.5, color: C.strong, weight: 600 }).svg}${txt(ox + 24, ay + 76, X.AI.sub, { size: 13, color: C.gray }).svg}</g>`
     const resK = show(s + 4.4, s + SCENE, { from: 'translateY(8px)' })
-    scene4 += `<g ${A(resK)}>${chip(ox, ay + 120, 'next release: sign-ups up, export errors gone — measured, not guessed', { dot: C.green, size: 12.5 }).svg}${txt(ox, ay + 172, 'Swap Mixpanel for PostHog; the instrumentation stays.', { size: 13, color: C.gray }).svg}</g>`
+    scene4 += `<g ${A(resK)}>${chip(ox, ay + 120, X.LOOP_RESULT, { dot: C.green, size: 12.5 }).svg}${txt(ox, ay + 172, X.LOOP_NOTE, { size: 13, color: C.gray }).svg}</g>`
   }
 
   // ============================================================= SCENE 5
-  let scene5 = caption(
-    4,
-    'Faster, cheaper, higher-quality apps for web, mobile and API that stay easy to change.',
-  )
+  let scene5 = caption(4, X.SCENES[4].title, X.SCENES[4].links)
   {
     const s = 4 * SCENE
-    const cards = [
-      ['01', 'Faster', 'Start from a working, tested app.'],
-      ['02', 'Cheaper', 'Nothing is regenerated: the AI wires packages, it doesn’t rewrite them.'],
-      ['03', 'Higher quality', 'Type-checked, linted and tested before it reaches you.'],
-      ['04', 'Easier to maintain\n& scale', 'Change a bond, not the app.'],
-    ]
+    const cards = X.OUTCOMES.map((o) => [o.num, o.svgTitle ?? o.title, o.body])
     const cw = 258
-    const chh = 200
+    const chh = 240
     cards.forEach(([num, title, body], i) => {
       const x = 60 + i * (cw + 16)
       const y = 200
@@ -857,26 +746,22 @@ function build(theme, slide = null) {
         scene5 += txt(x + 24, y + 72 + ti * 24, t, { size: 19, weight: 600, color: C.strong }).svg
       })
       const bodyY = y + 104 + (titleLines.length - 1) * 24
-      wrap(body, cw - 48, 14.5).forEach((l, li) => {
-        scene5 += txt(x + 24, bodyY + li * 22, l, { size: 14.5, color: C.gray }).svg
+      wrap(body, cw - 48, 14).forEach((l, li) => {
+        scene5 += txt(x + 24, bodyY + li * 20, l, { size: 14, color: C.gray }).svg
       })
       scene5 += `</g>`
     })
     const platK = show(s + 2.2, s + SCENE, { fadeOut: 0.3 })
-    const py = 444
-    scene5 += `<g ${A(platK)}>${eyebrow(60, py, 'Cross-platform from one codebase')}`
-    const plats = [
-      ['Web', 'React · Vue · Svelte · Solid · Angular'],
-      ['Mobile', 'React Native + native device bonds'],
-      ['API', 'Any framework, database or host'],
-    ]
+    const py = 458
+    scene5 += `<g ${A(platK)}>${eyebrow(60, py, X.PLATFORMS_LABEL)}`
+    const plats = X.PLATFORMS.map((pl) => [pl.name, pl.sub])
     plats.forEach(([t, sub], i) => {
       const x = 60 + i * 366
       scene5 += `<g>${card(x, py + 14, 350, 62, { rx: 12 })}<circle cx="${x + 20}" cy="${py + 45}" r="4" fill="${accent(i)}"/>${txt(x + 36, py + 40, t, { size: 14.5, weight: 600, color: C.strong }).svg}${txt(x + 36, py + 61, sub, { size: 13.5, color: C.gray }).svg}</g>`
     })
     scene5 += `</g>`
     const closeK = show(s + 3.2, s + SCENE, { fadeOut: 0.3 })
-    scene5 += `<g ${A(closeK)}${hov({ href: 'https://www.molecule.dev' })}>${hit(56, 542, 1090, 64)}${txt(60, 560, 'Plain code you own. Export it, with its database and keys, at any time.', { size: 15.5, weight: 600, color: C.strong }).svg}${txt(60, 585, 'Apache-2.0  ·  no lock-in  ·  any AI agent, editor or CI.', { size: 14, color: C.gray }).svg}${txt(1140, 585, 'www.molecule.dev', { size: 14, weight: 700, color: C.link, anchor: 'end' }).svg}</g>`
+    scene5 += `<g ${A(closeK)}${hov({ href: X.CLOSING.href })}>${hit(56, 542, 1090, 64)}${txt(60, 560, X.CLOSING.strong, { size: 15.5, weight: 600, color: C.strong }).svg}${txt(60, 585, X.CLOSING.sub, { size: 14, color: C.gray }).svg}${txt(1140, 585, X.CLOSING.site, { size: 14, weight: 700, color: C.link, anchor: 'end' }).svg}</g>`
   }
 
   // ================================================================= emit
@@ -934,40 +819,11 @@ writeFileSync(
     {
       loopSeconds: LOOP,
       sceneSeconds: SCENE,
-      scenes: [
-        {
-          id: 'describe',
-          label: 'Describe',
-          title:
-            'Describe the app in the molecule.dev IDE, the mlcl CLI or any MCP agent, and Synthase assembles it from the open-source @molecule catalog.',
-        },
-        {
-          id: 'bonds',
-          label: 'Bonds',
-          title:
-            'Every provider sits behind a swappable bond, so changing the database is one import, not a rewrite.',
-        },
-        {
-          id: 'built-in',
-          label: 'Built in',
-          title:
-            'Auth, payments, i18n, analytics, monitoring, tests and CI come wired in from day one.',
-        },
-        {
-          id: 'feedback',
-          label: 'Feedback loop',
-          title:
-            'Built-in analytics, error tracking and feedback let the AI keep improving the app from real use.',
-        },
-        {
-          id: 'outcomes',
-          label: 'Outcomes',
-          title:
-            'Faster, cheaper, higher-quality apps for web, mobile and API that stay easy to change.',
-        },
-      ],
+      scenes: X.SCENES.map(({ id, label, title }) => ({ id, label, title })),
     },
     null,
     2,
   ) + '\n',
 )
+writeFileSync(join(OUT_SRC, 'content.json'), JSON.stringify(X.CONTENT, null, 2) + '\n')
+console.log('wrote content.json + timeline.json → src/animation')
