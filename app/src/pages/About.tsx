@@ -1,6 +1,7 @@
 import { useTranslation } from '@molecule/app-react'
 import { getClassMap } from '@molecule/app-ui'
 
+import { embedMarkdown } from '../animation/slides.js'
 import {
   APP_DESCRIPTION,
   MOLECULE_REPO_URL,
@@ -9,6 +10,7 @@ import {
   WORKSPACE_URL,
 } from '../branding.js'
 import { PageMeta } from '../components/PageMeta.js'
+import { SITE_URL } from '../site.js'
 
 /**
  * About page — `/about/`: what this site is, where its parts live, and how to
@@ -105,8 +107,24 @@ export function About() {
       <p className={cm.cn(cm.sp('pt', 2), cm.textMuted)}>
         {t('about.embed', undefined, {
           defaultValue:
-            'The raw SVGs are served from this site in both themes; the “Copy README embed” button on the front page puts a theme-aware <picture> block on your clipboard, and the link under it points here.',
+            'The raw SVGs are served from this site in both themes; put this in a README and GitHub picks the theme: ',
         })}
+      </p>
+      <pre
+        className={cm.cn(cm.textSize('xs'), cm.sp('mt', 3))}
+        style={{ overflowX: 'auto', padding: 12, borderRadius: 10 }}
+        data-mol-id="about-embed"
+      >
+        {embedMarkdown(SITE_URL)}
+      </pre>
+      <p className={cm.cn(cm.sp('pt', 3), cm.textMuted)}>
+        <a className={cm.link} href="/how-molecule-works-dark.svg" data-mol-id="about-svg-dark">
+          {t('about.svgDark', undefined, { defaultValue: 'Looping SVG (dark)' })}
+        </a>
+        {' · '}
+        <a className={cm.link} href="/how-molecule-works-light.svg" data-mol-id="about-svg-light">
+          {t('about.svgLight', undefined, { defaultValue: 'Looping SVG (light)' })}
+        </a>
       </p>
     </div>
   )
