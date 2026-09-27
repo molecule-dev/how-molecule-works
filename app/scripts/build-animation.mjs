@@ -305,7 +305,10 @@ function build(theme, slide = null) {
 
   // ------------------------------------------------------------------ header
   const logo = `<g transform="translate(58 40) scale(1.25)"><g transform="matrix(.86229 0 0 .86229 .81594 2.2034)" stroke="${C.primary}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4737"><g><line x1="20.959" x2="24.924" y1="18.579" y2="25.446"/><line x1="20.959" x2="24.924" y1="13.422" y2="6.555"/><line x1="16.494" x2="8.563" y1="16" y2="16"/></g><g fill="none"><circle cx="19.47" cy="16" r="2.976"/><circle cx="5.587" cy="16" r="2.977"/><circle cx="26.412" cy="28.023" r="2.976"/><circle cx="26.412" cy="3.977" r="2.976"/></g></g></g>`
-  const header = `<g${hov({ href: 'https://www.molecule.dev' })}>${logo}${txt(112, 68, 'How Molecule works', { size: 22, weight: 700, color: C.strong }).svg}</g><g${hov({ href: 'https://www.molecule.dev' })}>${txt(1140, 68, 'molecule.dev', { size: 15, weight: 500, color: C.link, anchor: 'end' }).svg}</g>`
+  const hit = (x, y, w, h) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent"/>`
+  const wmW = tw('molecule.dev', 15, 500)
+  const header = `<g${hov({ href: 'https://www.molecule.dev' })}>${hit(52, 30, tw('How Molecule works', 22, 700) + 70, 48)}${logo}${txt(112, 68, 'How Molecule works', { size: 22, weight: 700, color: C.strong }).svg}</g><g${hov({ href: 'https://www.molecule.dev' })}>${hit(1140 - wmW - 8, 50, wmW + 16, 26)}${txt(1140, 68, 'molecule.dev', { size: 15, weight: 500, color: C.link, anchor: 'end' }).svg}</g>`
 
   // Scene index along the bottom: five segments, the live one lit.
   const SCENES = ['Describe', 'Bonds', 'Built in', 'Feedback loop', 'Outcomes']
@@ -440,7 +443,7 @@ function build(theme, slide = null) {
     // Catalog column.
     const catX = 520
     const catK = show(s + 0.4, s + SCENE, { from: 'translateX(-8px)' })
-    let cat = `<g ${A(catK)}${hov({ href: 'https://www.molecule.dev/packages' })}>${eyebrow(catX, 214, '@molecule/*  ·  the catalog')}`
+    let cat = `<g ${A(catK)}${hov({ href: 'https://www.molecule.dev/packages' })}>${hit(catX - 4, 198, tw('@MOLECULE/*  ·  THE CATALOG', 13, 600, 0.14) + 8, 24)}${eyebrow(catX, 214, '@molecule/*  ·  the catalog')}`
     for (let i = 0; i < 11; i++)
       cat += `<rect x="${catX}" y="${234 + i * 30}" width="${90 + ((i * 37) % 60)}" height="16" rx="5" fill="${C.layer}" stroke="${C.border}"/>`
     scene1 += cat + `</g>`
@@ -874,7 +877,7 @@ function build(theme, slide = null) {
     })
     scene5 += `</g>`
     const closeK = show(s + 3.2, s + SCENE, { fadeOut: 0.3 })
-    scene5 += `<g ${A(closeK)}${hov({ href: 'https://www.molecule.dev' })}>${txt(60, 560, 'Plain TypeScript you own. Export the code, the database and your keys at any time.', { size: 15.5, weight: 600, color: C.strong }).svg}${txt(60, 585, 'Apache-2.0 packages on npm  ·  no lock-in  ·  works with any AI agent, editor or CI.', { size: 14, color: C.gray }).svg}${txt(1140, 585, 'www.molecule.dev', { size: 14, weight: 700, color: C.link, anchor: 'end' }).svg}</g>`
+    scene5 += `<g ${A(closeK)}${hov({ href: 'https://www.molecule.dev' })}>${hit(56, 542, 1090, 64)}${txt(60, 560, 'Plain TypeScript you own. Export the code, the database and your keys at any time.', { size: 15.5, weight: 600, color: C.strong }).svg}${txt(60, 585, 'Apache-2.0 packages on npm  ·  no lock-in  ·  works with any AI agent, editor or CI.', { size: 14, color: C.gray }).svg}${txt(1140, 585, 'www.molecule.dev', { size: 14, weight: 700, color: C.link, anchor: 'end' }).svg}</g>`
   }
 
   // ================================================================= emit
