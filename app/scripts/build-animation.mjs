@@ -5,7 +5,14 @@
  *
  *   src/animation/how-molecule-works-{dark,light}.svg   (bundled, inlined by the player)
  *   public/how-molecule-works-{dark,light}.svg          (served raw, for embeds + the README)
- *   src/animation/timeline.json                          (loop + scene timing the player reads)
+ *   src/animation/slides/slide-{1..5}-{dark,light}.svg       (one scene per file, for the slideshow)
+ *   src/animation/timeline.json                          (loop + scene timing the site reads)
+ *
+ * A SLIDE is a scene on its own: its entrance animations play once and hold
+ * (`animation-fill-mode: forwards`), its ambient loops keep running (the
+ * provider cycle, the orbiting dot, the cursor blink), and the scene index at
+ * the bottom is static with the current slide lit. The site swaps slides as
+ * the visitor navigates, so each one animates in fresh.
  *
  * Design: the tokens of www.molecule.dev's landing page — Arimo type, the
  * dark/light palettes, card radii, code-block colors and accent set. Every
@@ -64,7 +71,6 @@ const face = (weight) => {
 // ---------------------------------------------------------------- timeline
 const LOOP = 30 // seconds
 const SCENE = 6
-const pct = (s) => +((s / LOOP) * 100).toFixed(3)
 
 // ------------------------------------------------------------------ themes
 // Straight from Landing.css `.landing.dark` / `.landing.light`, plus the code
@@ -116,10 +122,16 @@ const MONO = `ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace`
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 /** Builds one theme's SVG. */
-function build(theme) {
+function build(theme, slide = null) {
   const C = THEMES[theme]
   const keyframes = []
   let idCounter = 0
+  // Loop mode: one 30 s timeline. Slide mode: this scene alone, on a 6 s timeline that holds.
+  const SLIDE = slide !== null
+  const base = SLIDE ? slide * SCENE : 0
+  const total = SLIDE ? SCENE : LOOP
+  const pct = (sec) => +(((sec - base) / total) * 100).toFixed(3)
+  const ITER = SLIDE ? '1 forwards' : 'infinite'
   // Glyph outlines, defined once per (weight, glyph) and reused with <use>.
   const glyphDefs = new Map()
 
@@ -200,7 +212,7 @@ function build(theme) {
     const frames = [`0%{${hidden}}`]
     if (s0 > 0) frames.push(`${s0}%{${hidden}}`)
     frames.push(`${s1}%{${shown}}`, `${e0}%{${shown}}`)
-    if (hold) frames.push(`100%{${shown}}`)
+    if (hold || SLIDE) frames.push(`100%{${shown}}`)
     else frames.push(`${e1}%{${hidden}}`, `100%{${hidden}}`)
     keyframes.push(`@keyframes ${name}{${frames.join('')}}`)
     return name
@@ -209,14 +221,17 @@ function build(theme) {
   function draw(start, end, len, { dur = 0.6, fadeOut = 0.3 } = {}) {
     const name = `d${++idCounter}`
     const s0 = pct(start)
+    const tail = SLIDE
+      ? `100%{opacity:1;stroke-dashoffset:0}`
+      : `${pct(end - fadeOut)}%{opacity:1;stroke-dashoffset:0}${pct(end)}%{opacity:0;stroke-dashoffset:0}100%{opacity:0;stroke-dashoffset:${len}}`
     keyframes.push(
-      `@keyframes ${name}{0%{opacity:1;stroke-dashoffset:${len}}${s0 > 0 ? `${s0}%{opacity:1;stroke-dashoffset:${len}}` : ''}${pct(start + dur)}%{opacity:1;stroke-dashoffset:0}${pct(end - fadeOut)}%{opacity:1;stroke-dashoffset:0}${pct(end)}%{opacity:0;stroke-dashoffset:0}100%{opacity:0;stroke-dashoffset:${len}}}`,
+      `@keyframes ${name}{0%{opacity:1;stroke-dashoffset:${len}}${s0 > 0 ? `${s0}%{opacity:1;stroke-dashoffset:${len}}` : ''}${pct(start + dur)}%{opacity:1;stroke-dashoffset:0}${tail}}`,
     )
     return { name, len }
   }
-  const A = (name) => `style="animation:${name} ${LOOP}s linear infinite"`
+  const A = (name) => `style="animation:${name} ${total}s linear ${ITER}"`
   const AT = (name) =>
-    `style="transform-box:fill-box;transform-origin:center;animation:${name} ${LOOP}s linear infinite"`
+    `style="transform-box:fill-box;transform-origin:center;animation:${name} ${total}s linear ${ITER}"`
 
   // ------------------------------------------------------------- primitives
   /** A rounded label chip (8px radius like the site's prompt form); returns its geometry. */
@@ -288,6 +303,11 @@ function build(theme) {
     const y = 662
     SCENES.forEach((label, i) => {
       const x = 60 + i * (segW + 20)
+      if (SLIDE) {
+        const on = i === slide
+        footer += `<g data-scene="${i}" style="opacity:${on ? 1 : 0.35}"><rect x="${x - 4}" y="${y - 12}" width="${segW + 8}" height="44" fill="transparent"/><rect x="${x}" y="${y}" width="${segW}" height="3" rx="1.5" fill="${on ? C.link : C.border}"/>${txt(x, y + 24, `${i + 1}  ${label}`, { size: 12, weight: 600, tracking: 0.1, color: C.gray }).svg}</g>`
+        return
+      }
       const kf = `s${++idCounter}`
       const s0 = pct(i * SCENE)
       keyframes.push(
@@ -335,7 +355,9 @@ function build(theme) {
       run.glyphs.forEach((g, i) => {
         const at = typeStart + ci * perChar
         keyframes.push(
-          `.${cls}${i}{animation:${cls}${i} ${LOOP}s linear infinite}@keyframes ${cls}${i}{0%,${pct(at)}%{opacity:0}${pct(at + 0.02)}%,${pct(s + SCENE - 0.4)}%{opacity:1}${pct(s + SCENE)}%,100%{opacity:0}}`,
+          SLIDE
+            ? `.${cls}${i}{animation:${cls}${i} ${total}s linear 1 forwards}@keyframes ${cls}${i}{0%,${pct(at)}%{opacity:0}${pct(at + 0.02)}%,100%{opacity:1}}`
+            : `.${cls}${i}{animation:${cls}${i} ${LOOP}s linear infinite}@keyframes ${cls}${i}{0%,${pct(at)}%{opacity:0}${pct(at + 0.02)}%,${pct(s + SCENE - 0.4)}%{opacity:1}${pct(s + SCENE)}%,100%{opacity:0}}`,
         )
         pen += run.positions[i].xAdvance
         cursor.push([at + 0.02, (pen * 16) / UPM, y0 - (py + 48)])
@@ -352,10 +374,16 @@ function build(theme) {
     keyframes.push(`@keyframes ${cur}{${cf}}`)
     const typedEnd = typeStart + prompt.length * perChar
     const blink = `bl${++idCounter}`
-    keyframes.push(
-      `@keyframes ${blink}{0%,${pct(s + 0.6)}%{opacity:0}${pct(s + 0.61)}%,${pct(typedEnd)}%{opacity:1}${pct(typedEnd + 0.4)}%{opacity:0}${pct(typedEnd + 0.8)}%{opacity:1}${pct(typedEnd + 1.2)}%{opacity:0}${pct(typedEnd + 1.6)}%,${pct(s + SCENE - 0.4)}%{opacity:1}${pct(s + SCENE)}%,100%{opacity:0}}`,
-    )
-    scene1 += `<g style="animation:${blink} ${LOOP}s steps(1,end) infinite"><rect x="${px + 21}" y="${py + 48}" width="2" height="18" fill="${C.link}" style="animation:${cur} ${LOOP}s steps(1,end) infinite"/></g></g>`
+    if (!SLIDE)
+      keyframes.push(
+        `@keyframes ${blink}{0%,${pct(s + 0.6)}%{opacity:0}${pct(s + 0.61)}%,${pct(typedEnd)}%{opacity:1}${pct(typedEnd + 0.4)}%{opacity:0}${pct(typedEnd + 0.8)}%{opacity:1}${pct(typedEnd + 1.2)}%{opacity:0}${pct(typedEnd + 1.6)}%,${pct(s + SCENE - 0.4)}%{opacity:1}${pct(s + SCENE)}%,100%{opacity:0}}`,
+      )
+    if (SLIDE) {
+      keyframes.push(`@keyframes ${blink}{0%,50%{opacity:0}51%,100%{opacity:1}}`)
+      scene1 += `<g ${A(show(s + 0.6, s + SCENE, { fadeIn: 0.01, from: 'none' }))}><g style="animation:${blink} 1s steps(1,end) ${(typedEnd - base).toFixed(2)}s infinite"><rect x="${px + 21}" y="${py + 48}" width="2" height="18" fill="${C.link}" style="animation:${cur} ${total}s steps(1,end) 1 forwards"/></g></g></g>`
+    } else {
+      scene1 += `<g style="animation:${blink} ${LOOP}s steps(1,end) infinite"><rect x="${px + 21}" y="${py + 48}" width="2" height="18" fill="${C.link}" style="animation:${cur} ${LOOP}s steps(1,end) infinite"/></g></g>`
+    }
 
     // Synthase / mlcl badges under the prompt.
     const badgeK = show(s + 2.8, s + SCENE)
@@ -483,14 +511,33 @@ function build(theme) {
       const color = accent(i)
       const t0 = s + 1.0 + i * slot
       const t1 = i === providers.length - 1 ? s + SCENE : t0 + slot
-      const k = show(t0, t1, { from: 'translateX(48px)', fadeIn: 0.35, fadeOut: 0.25 })
+      let k
+      if (SLIDE) {
+        // An ambient cycle: 4 slots of 1.2 s, forever, starting after the first second.
+        const period = providers.length * slot
+        const q = (sec) => +((sec / period) * 100).toFixed(3)
+        const hidden = 'opacity:0;visibility:hidden;transform:translateX(48px)'
+        const shown = 'opacity:1;visibility:visible;transform:none'
+        k = `cy${++idCounter}`
+        const a = i * slot
+        const frames =
+          i === 0
+            ? `0%{${shown}}${q(slot - 0.25)}%{${shown}}${q(slot)}%{${hidden}}${q(period - 0.3)}%{${hidden}}100%{${shown}}`
+            : `0%{${hidden}}${q(a)}%{${hidden}}${q(a + 0.35)}%{${shown}}${q(a + slot - 0.25)}%{${shown}}${q(a + slot)}%{${hidden}}100%{${hidden}}`
+        keyframes.push(`@keyframes ${k}{${frames}}`)
+        keyframes.push(
+          `.${k}{animation:${k} ${period}s linear ${(t0 - base).toFixed(2)}s infinite backwards}`,
+        )
+      } else {
+        k = show(t0, t1, { from: 'translateX(48px)', fadeIn: 0.35, fadeOut: 0.25 })
+      }
       const c = chip(sx + 24, sy + 157, `@molecule/api-database-${id}`, {
         dot: color,
         isMono: true,
         size: 13,
         stroke: color,
       })
-      scene2 += `<g ${A(k)}>${c.svg}${txt(sx + 416, sy + 178, label, { size: 13, weight: 600, color, anchor: 'end' }).svg}${mono(cx0 + 22, by + 62 + 2 * 28 + 5, `  '@molecule/api-database-${id}'`, { size: 14, color: CODE.add }).svg}</g>`
+      scene2 += `<g ${SLIDE ? `class="${k}"` : A(k)}>${c.svg}${txt(sx + 416, sy + 178, label, { size: 13, weight: 600, color, anchor: 'end' }).svg}${mono(cx0 + 22, by + 62 + 2 * 28 + 5, `  '@molecule/api-database-${id}'`, { size: 14, color: CODE.add }).svg}</g>`
     })
 
     const catsK = show(s + 1.6, s + SCENE, { from: 'translateY(10px)' })
@@ -622,10 +669,15 @@ function build(theme) {
     })
     scene4 += `${txt(lcx, lcy - 4, 'every release', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}${txt(lcx, lcy + 16, 'a little better', { size: 13, weight: 700, anchor: 'middle', color: C.gray }).svg}</g>`
     const spin = `r${++idCounter}`
-    keyframes.push(
-      `@keyframes ${spin}{0%{opacity:0;transform:rotate(0deg)}${pct(s + 0.6)}%{opacity:0;transform:rotate(0deg)}${pct(s + 0.9)}%{opacity:1}${pct(s + SCENE - 0.3)}%{opacity:1;transform:rotate(720deg)}${pct(s + SCENE)}%{opacity:0;transform:rotate(720deg)}100%{opacity:0;transform:rotate(720deg)}}`,
-    )
-    scene4 += `<g style="transform-box:view-box;transform-origin:${lcx}px ${lcy}px;animation:${spin} ${LOOP}s linear infinite"><circle cx="${lcx}" cy="${lcy - lr}" r="7" fill="${C.link}"/><circle cx="${lcx}" cy="${lcy - lr}" r="13" fill="${C.link}" fill-opacity="0.25"/></g>`
+    if (SLIDE)
+      keyframes.push(`@keyframes ${spin}{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}`)
+    else
+      keyframes.push(
+        `@keyframes ${spin}{0%{opacity:0;transform:rotate(0deg)}${pct(s + 0.6)}%{opacity:0;transform:rotate(0deg)}${pct(s + 0.9)}%{opacity:1}${pct(s + SCENE - 0.3)}%{opacity:1;transform:rotate(720deg)}${pct(s + SCENE)}%{opacity:0;transform:rotate(720deg)}100%{opacity:0;transform:rotate(720deg)}}`,
+      )
+    scene4 += SLIDE ? `<g ${A(show(s + 0.6, s + SCENE, { fadeIn: 0.3, from: 'none' }))}>` : ''
+    scene4 += `<g style="transform-box:view-box;transform-origin:${lcx}px ${lcy}px;animation:${spin} ${SLIDE ? '3s' : `${LOOP}s`} linear infinite"><circle cx="${lcx}" cy="${lcy - lr}" r="7" fill="${C.link}"/><circle cx="${lcx}" cy="${lcy - lr}" r="13" fill="${C.link}" fill-opacity="0.25"/></g>`
+    if (SLIDE) scene4 += '</g>'
 
     // Right: signals arriving from the running app, and what the AI does with them.
     const ox = 620
@@ -731,18 +783,21 @@ function build(theme) {
 </defs>
 <style>
   ${keyframes.join('\n  ')}
-  svg:hover *{animation-play-state:paused !important}
-  @media (prefers-reduced-motion: reduce){ *{animation:none !important} #scene-1,#scene-2,#scene-3,#scene-4{display:none} }
+${SLIDE ? '  @media (prefers-reduced-motion: reduce){ *{animation-duration:0.001s !important;animation-delay:0s !important;animation-iteration-count:1 !important} }' : '  svg:hover *{animation-play-state:paused !important}\n  @media (prefers-reduced-motion: reduce){ *{animation:none !important} #scene-1,#scene-2,#scene-3,#scene-4{display:none} }'}
 </style>
 <rect width="1200" height="700" rx="16" fill="${C.bg}"/>
 <rect x="0.5" y="0.5" width="1199" height="699" rx="16" fill="none" stroke="${C.border}"/>
 ${header}
 ${footer}
-<g id="scene-1">${scene1}</g>
+${
+  SLIDE
+    ? `<g id="scene-${slide + 1}">${[scene1, scene2, scene3, scene4, scene5][slide]}</g>`
+    : `<g id="scene-1">${scene1}</g>
 <g id="scene-2">${scene2}</g>
 <g id="scene-3">${scene3}</g>
 <g id="scene-4">${scene4}</g>
-<g id="scene-5">${scene5}</g>
+<g id="scene-5">${scene5}</g>`
+}
 </svg>
 `
 }
@@ -756,6 +811,14 @@ for (const theme of ['dark', 'light']) {
   console.log(
     `wrote how-molecule-works-${theme}.svg (${(svg.length / 1024).toFixed(0)} KB) → src/animation + public`,
   )
+}
+mkdirSync(join(OUT_SRC, 'slides'), { recursive: true })
+for (const theme of ['dark', 'light']) {
+  for (let i = 0; i < 5; i++) {
+    const svg = build(theme, i)
+    writeFileSync(join(OUT_SRC, 'slides', `slide-${i + 1}-${theme}.svg`), svg)
+  }
+  console.log(`wrote 5 ${theme} slides → src/animation/slides`)
 }
 writeFileSync(
   join(OUT_SRC, 'timeline.json'),

@@ -2,8 +2,8 @@ import { useTranslation } from '@molecule/app-react'
 import { getClassMap } from '@molecule/app-ui'
 
 import { APP_DESCRIPTION, MOLECULE_REPO_URL, WEBSITE_URL } from '../branding.js'
-import { AnimationPlayer } from '../components/AnimationPlayer.js'
 import { PageMeta } from '../components/PageMeta.js'
+import { Slideshow } from '../components/Slideshow.js'
 
 /** The front page: the animated graphic with its controls. Prerendered to `dist/index.html`. */
 export function Home() {
@@ -23,12 +23,12 @@ export function Home() {
         >
           {t('home.lead', undefined, {
             defaultValue:
-              'Five scenes, thirty seconds: describe an app, watch it compose from open-source packages, swap a provider, see what ships built in, and how every build is verified. Pause, scrub, or jump to a scene.',
+              'Five slides: describe an app, watch it compose from open-source packages, swap a provider, see what ships built in, and how the app keeps improving. Step through at your own pace.',
           })}
         </p>
       </header>
 
-      <AnimationPlayer />
+      <Slideshow />
 
       <section
         className={cm.cn(cm.textCenter, cm.sp('pt', 10), cm.textMuted)}

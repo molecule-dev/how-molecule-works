@@ -74,7 +74,7 @@ export function About() {
       <p className={cm.cn(cm.sp('pt', 4), cm.textMuted)} data-mol-id="about-description">
         {t('about.description', undefined, {
           defaultValue:
-            'The graphic at the top of the molecule README is a single animated SVG: CSS keyframes, outlined type, no scripts, so it plays inside GitHub’s image proxy. This site inlines the same file and drives its animations, which is how the controls work. The site itself is a molecule.dev static project: scaffolded with mlcl, built in a molecule.dev sandbox, deployed from there, with the badge in the corner pointing at its public workspace.',
+            'The graphic at the top of the molecule README is a single animated SVG: CSS keyframes, outlined type, no scripts, so it plays inside GitHub’s image proxy. This site splits it into slides you step through; each slide is the same artwork, animating in the same way, then holding. The site itself is a molecule.dev static project: scaffolded with mlcl, built in a molecule.dev sandbox, deployed from there, with the badge in the corner pointing at its public workspace.',
         })}
       </p>
       <p className={cm.cn(cm.sp('pt', 4), cm.textMuted)}>
@@ -105,7 +105,7 @@ export function About() {
       <p className={cm.cn(cm.sp('pt', 2), cm.textMuted)}>
         {t('about.embed', undefined, {
           defaultValue:
-            'The raw SVGs are served from this site in both themes; the “Copy README embed” button on the front page puts a theme-aware <picture> block on your clipboard.',
+            'The raw SVGs are served from this site in both themes; the “Copy README embed” button on the front page puts a theme-aware <picture> block on your clipboard, and the link under it points here.',
         })}
       </p>
     </div>

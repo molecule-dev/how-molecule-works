@@ -11,6 +11,7 @@ import { createCSSVariablesThemeProvider, darkTheme, lightTheme } from '@molecul
 export const themeProvider = createCSSVariablesThemeProvider({
   themes: [lightTheme, darkTheme],
   defaultTheme: 'light',
+  systemDefault: true,
   persistKey: 'molecule-theme',
 })
 export function setupAppThemeCssVariables(): void {
