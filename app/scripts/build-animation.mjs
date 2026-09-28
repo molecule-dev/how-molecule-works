@@ -470,8 +470,13 @@ function build(theme, slide = null) {
       isMono: X.BADGES[1].mono,
     })
     scene1 += `<g ${A(badgeK)}>${b1.svg}${b2.svg}`
-    wrap(X.HOW_NOTE, 400, 14).forEach((l, i) => {
+    const howLines = wrap(X.HOW_NOTE, 400, 14)
+    howLines.forEach((l, i) => {
       scene1 += txt(px, 486 + i * 22, l, { size: 14, color: C.gray }).svg
+    })
+    const toolsY = 486 + howLines.length * 22 + 14
+    wrap(X.TOOLS_NOTE, 400, 14).forEach((l, i) => {
+      scene1 += txt(px, toolsY + i * 22, l, { size: 14, color: C.gray }).svg
     })
     scene1 += `</g>`
 

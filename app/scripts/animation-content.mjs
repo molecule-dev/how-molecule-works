@@ -69,6 +69,8 @@ export const BADGES = [
 ]
 export const HOW_NOTE =
   'It picks packages from their generated docs and wires them like hand-written code.'
+export const TOOLS_NOTE =
+  'Works with your favorite tools and AI agents, or just use the molecule.dev IDE.'
 export const CATALOG_LABEL = '@molecule/*  ·  the catalog'
 export const CATALOG_HREF = `${SITE}/packages`
 /** The packages Synthase picks for the prompt, and what each gives you. */
@@ -276,6 +278,7 @@ export const CONTENT = {
   prompt: { text: PROMPT, lines: PROMPT_LINES, href: PROMPT_HREF },
   badges: BADGES,
   howNote: HOW_NOTE,
+  toolsNote: TOOLS_NOTE,
   catalog: { label: CATALOG_LABEL, href: CATALOG_HREF },
   nodes: NODES,
   done: DONE,

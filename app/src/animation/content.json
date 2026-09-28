@@ -58,6 +58,7 @@
     }
   ],
   "howNote": "It picks packages from their generated docs and wires them like hand-written code.",
+  "toolsNote": "Works with your favorite tools and AI agents, or just use the molecule.dev IDE.",
   "catalog": {
     "label": "@molecule/*  ·  the catalog",
     "href": "https://www.molecule.dev/packages"

@@ -117,6 +117,9 @@ function Describe() {
       <p className="hmw-note" data-step style={step(3)}>
         {c.howNote}
       </p>
+      <p className="hmw-note" data-step style={step(3)}>
+        {c.toolsNote}
+      </p>
       <p className="hmw-lbl" data-step style={step(4)}>
         <a href={c.catalog.href} target="_blank" rel="noopener noreferrer">
           {c.catalog.label}
