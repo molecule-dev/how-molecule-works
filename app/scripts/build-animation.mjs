@@ -720,7 +720,9 @@ function build(theme, slide = null) {
     signals.forEach(([kind, text], i) => {
       const y = oy + i * 68
       const k = show(s + 1.4 + i * 0.5, s + SCENE, { from: 'translateX(14px)' })
-      scene4 += `<g ${A(k)}>${card(ox, y, 520, 54, { rx: 12 })}<rect x="${ox}" y="${y + 12}" width="4" height="30" rx="2" fill="${accent(i)}"/>${eyebrow(ox + 24, y + 22, kind, { color: accent(i) })}${txt(ox + 24, y + 42, text, { size: 13.5, color: C.text }).svg}</g>`
+      // The accent bar sits inside the card, clear of its rounded corners — the
+      // same inset bar as the landing page's signal cards and the fleet's accentCard.
+      scene4 += `<g ${A(k)}>${card(ox, y, 520, 54, { rx: 12 })}<rect x="${ox + 12}" y="${y + 12}" width="4" height="30" rx="2" fill="${accent(i)}"/>${eyebrow(ox + 30, y + 22, kind, { color: accent(i) })}${txt(ox + 30, y + 42, text, { size: 13.5, color: C.text }).svg}</g>`
     })
     // The AI's response, then the measured result.
     const ay = oy + 3 * 68 + 12
