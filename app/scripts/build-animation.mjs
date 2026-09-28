@@ -640,6 +640,7 @@ function build(theme, slide = null) {
     // The site's capability list: 12px radius cards, 8px accent dot cycling four colors.
     const tiles = X.TILES.map((t) => t.label)
     const TILE_INFO = X.TILES.map((t) => t.info)
+    const TILE_HREF = X.TILES.map((t) => t.href)
     const cols = 4
     const tw0 = 258
     const th = 74
@@ -649,7 +650,7 @@ function build(theme, slide = null) {
       const t0 = s + 0.3 + i * 0.16
       const k = show(t0, s + SCENE, { from: 'translateY(8px) scale(0.96)', fadeIn: 0.35 })
       const checkK = show(t0 + 0.35, s + SCENE, { from: 'scale(0.4)', fadeIn: 0.25 })
-      scene3 += `<g ${AT(k)}${hov({ info: TILE_INFO[i] })}>${card(x, y, tw0, th, { rx: 12 })}<circle cx="${x + 20}" cy="${y + th / 2}" r="4" fill="${accent(i)}"/>${txt(x + 36, y + th / 2 + 5.5, label, { size: 15.5, weight: 500, color: C.strong }).svg}<g ${AT(checkK)}><circle cx="${x + tw0 - 24}" cy="${y + th / 2}" r="10" fill="${C.green}" fill-opacity="0.16" stroke="${C.green}"/><path d="M${x + tw0 - 29} ${y + th / 2} l3.5 3.5 l6.5 -7" fill="none" stroke="${C.green}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></g>`
+      scene3 += `<g ${AT(k)}${hov({ info: TILE_INFO[i], href: TILE_HREF[i] ?? undefined })}>${card(x, y, tw0, th, { rx: 12 })}<circle cx="${x + 20}" cy="${y + th / 2}" r="4" fill="${accent(i)}"/>${txt(x + 36, y + th / 2 + 5.5, label, { size: 15.5, weight: 500, color: C.strong }).svg}<g ${AT(checkK)}><circle cx="${x + tw0 - 24}" cy="${y + th / 2}" r="10" fill="${C.green}" fill-opacity="0.16" stroke="${C.green}"/><path d="M${x + tw0 - 29} ${y + th / 2} l3.5 3.5 l6.5 -7" fill="none" stroke="${C.green}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></g>`
     })
     const noteK = show(s + 3.4, s + SCENE)
     scene3 += `<g ${A(noteK)}>${txt(60, 588, X.TILES_NOTE, { size: 14, color: C.gray }).svg}</g>`

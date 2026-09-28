@@ -195,67 +195,83 @@
   "tiles": [
     {
       "label": "Auth & OAuth",
-      "info": "Sessions, passwords, two-factor and OAuth sign-in — @molecule/api-auth and app-auth."
+      "info": "Sessions, passwords, two-factor and OAuth sign-in — @molecule/api-auth and app-auth.",
+      "href": "https://www.molecule.dev/packages#auth"
     },
     {
       "label": "Payments & billing",
-      "info": "Checkout, subscriptions and invoices — @molecule/api-payments, with Stripe as a bond."
+      "info": "Checkout, subscriptions and invoices — @molecule/api-payments, with Stripe as a bond.",
+      "href": "https://www.molecule.dev/packages#payments"
     },
     {
       "label": "Database & migrations",
-      "info": "A typed data store with migrations; PostgreSQL, MySQL, SQLite or D1 behind one interface."
+      "info": "A typed data store with migrations; PostgreSQL, MySQL, SQLite or D1 behind one interface.",
+      "href": "https://www.molecule.dev/packages#database"
     },
     {
       "label": "i18n · dozens of languages",
-      "info": "Every UI string goes through t(); companion locale packages ship dozens of languages."
+      "info": "Every UI string goes through t(); companion locale packages ship dozens of languages.",
+      "href": "https://www.molecule.dev/packages#i18n"
     },
     {
       "label": "Analytics",
-      "info": "One tracking interface on both ends; Mixpanel, PostHog or your own provider."
+      "info": "One tracking interface on both ends; Mixpanel, PostHog or your own provider.",
+      "href": "https://www.molecule.dev/packages#analytics"
     },
     {
       "label": "Logging & monitoring",
-      "info": "Structured logging, health checks and uptime probes."
+      "info": "Structured logging, health checks and uptime probes.",
+      "href": "https://www.molecule.dev/packages#monitoring"
     },
     {
       "label": "Error tracking",
-      "info": "Exceptions captured with context on API and app; the tracker is a swappable bond."
+      "info": "Exceptions captured with context on API and app; the tracker is a swappable bond.",
+      "href": "https://www.molecule.dev/packages#error-tracking"
     },
     {
       "label": "Realtime",
-      "info": "Live updates over WebSockets or server-sent events behind one interface."
+      "info": "Live updates over WebSockets or server-sent events behind one interface.",
+      "href": "https://www.molecule.dev/packages#realtime"
     },
     {
       "label": "Uploads & media",
-      "info": "File uploads to S3-compatible storage or disk, with image handling."
+      "info": "File uploads to S3-compatible storage or disk, with image handling.",
+      "href": "https://www.molecule.dev/packages#file-upload"
     },
     {
       "label": "Push notifications",
-      "info": "Web push and mobile push through one bond."
+      "info": "Web push and mobile push through one bond.",
+      "href": "https://www.molecule.dev/packages#push-notifications"
     },
     {
       "label": "Search",
-      "info": "Full-text search; Meilisearch and others as bonds."
+      "info": "Full-text search; Meilisearch and others as bonds.",
+      "href": "https://www.molecule.dev/packages#search"
     },
     {
       "label": "Feature flags",
-      "info": "Flags and gradual rollouts, evaluated on both ends."
+      "info": "Flags and gradual rollouts, evaluated on both ends.",
+      "href": "https://www.molecule.dev/packages#feature-flags"
     },
     {
       "label": "Tests: unit, E2E",
-      "info": "Unit, integration and Playwright end-to-end tests are scaffolded with the app."
+      "info": "Unit, integration and Playwright end-to-end tests are scaffolded with the app.",
+      "href": "https://www.molecule.dev/packages#testing"
     },
     {
       "label": "CI/CD & deploys",
-      "info": "GitHub or GitLab workflows, and one-click deploys from molecule.dev."
+      "info": "GitHub or GitLab workflows, and one-click deploys from molecule.dev.",
+      "href": "https://www.molecule.dev/packages#ci"
     },
     {
       "label": "Accessibility (a11y)",
-      "info": "Semantic components, focus handling and contrast built into the UI kit."
+      "info": "Semantic components, focus handling and contrast built into the UI kit.",
+      "href": null
     },
     {
       "label": "AGENTS.md for AI agents",
-      "info": "Every project ships an AGENTS.md that teaches any coding agent its conventions."
+      "info": "Every project ships an AGENTS.md that teaches any coding agent its conventions.",
+      "href": null
     }
   ],
   "tilesNote": "Docs are generated from source, so an agent wires each package right the first time.",

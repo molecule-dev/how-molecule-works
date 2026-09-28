@@ -177,7 +177,29 @@ export const TILES = [
     'AGENTS.md for AI agents',
     'Every project ships an AGENTS.md that teaches any coding agent its conventions.',
   ],
-].map(([label, info]) => ({ label, info }))
+].map(([label, info], i) => {
+  // The catalog section each tile opens — the same category ids the landing page links.
+  const cats = [
+    'auth',
+    'payments',
+    'database',
+    'i18n',
+    'analytics',
+    'monitoring',
+    'error-tracking',
+    'realtime',
+    'file-upload',
+    'push-notifications',
+    'search',
+    'feature-flags',
+    'testing',
+    'ci',
+    null,
+    null,
+  ]
+  const cat = cats[i]
+  return { label, info, href: cat ? `${SITE}/packages#${cat}` : null }
+})
 export const TILES_NOTE =
   'Docs are generated from source, so an agent wires each package right the first time.'
 

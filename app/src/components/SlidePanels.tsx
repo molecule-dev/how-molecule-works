@@ -243,7 +243,13 @@ function BuiltIn() {
             style={{ ...step(1 + i), ['--c' as string]: acc(i) }}
           >
             <i aria-hidden="true" />
-            <span>{t.label}</span>
+            {t.href ? (
+              <a href={t.href} target="_blank" rel="noopener noreferrer">
+                {t.label}
+              </a>
+            ) : (
+              <span>{t.label}</span>
+            )}
             <span className="hmw-check" aria-hidden="true">
               <svg viewBox="0 0 10 10">
                 <path
@@ -489,7 +495,10 @@ a.hmw-chip:hover,a.hmw-chip:focus-visible{border-color:var(--hmw-link);box-shado
 @media (max-width:359px){.hmw-tiles{grid-template-columns:1fr}}
 .hmw-tiles > li{display:flex;align-items:center;gap:9px;min-height:44px;padding:10px 12px;border:1px solid var(--hmw-border);border-radius:12px;background:var(--hmw-layer);font-size:13.5px;font-weight:500;color:var(--hmw-strong)}
 .hmw-tiles > li > i{flex:none;width:6px;height:6px;border-radius:50%;background:var(--c)}
-.hmw-tiles > li > span:first-of-type{flex:1 1 auto;min-width:0}
+.hmw-tiles > li > span:first-of-type,.hmw-tiles > li > a{flex:1 1 auto;min-width:0}
+.hmw-tiles > li > a::after{content:'';position:absolute;inset:0}
+.hmw-tiles > li{position:relative}
+.hmw-tiles > li:has(> a):hover{border-color:var(--hmw-link)}
 .hmw-check{flex:none;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1px solid var(--hmw-green);color:var(--hmw-green);background:color-mix(in srgb,var(--hmw-green) 16%,transparent)}
 .hmw-check svg{width:10px;height:10px}
 .hmw-loop{margin:4px 0 0}
