@@ -26,7 +26,7 @@ export const WEBSITE_URL = 'https://www.molecule.dev'
 
 /** App description (PWA manifest, OG tags). */
 export const APP_DESCRIPTION =
-  'An interactive walk through how molecule.dev composes, wires, verifies and ships full-stack apps — the animated graphic from the molecule README, with controls.'
+  'How molecule.dev builds full-stack apps, in five slides: describe the app, swap providers as bonds, everything a real app needs built in, an app that keeps improving from real use, and what that adds up to. The animated graphic from the molecule README, as a site.'
 
 /** Primary brand color (PWA manifest, meta theme-color). */
 export const BRAND_COLOR = '#4070e0'

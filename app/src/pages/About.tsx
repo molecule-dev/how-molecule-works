@@ -76,13 +76,13 @@ export function About() {
       <p className={cm.cn(cm.sp('pt', 4), cm.textMuted)} data-mol-id="about-description">
         {t('about.description', undefined, {
           defaultValue:
-            'The graphic at the top of the molecule README is a single animated SVG: CSS keyframes, outlined type, no scripts, so it plays inside GitHub’s image proxy. This site splits it into slides you step through; each slide is the same artwork, animating in the same way, then holding. The site itself is a molecule.dev static project: scaffolded with mlcl, built in a molecule.dev sandbox, deployed from there, with the badge in the corner pointing at its public workspace.',
+            'The graphic at the top of the molecule README is one animated SVG: CSS keyframes, outlined type, no scripts, so it plays inside GitHub’s image proxy. This site shows its five scenes as slides. They play on their own, pause while you rest the pointer on them, and stop once you navigate; the index row under each slide, the arrow keys and a swipe all move between them; package and category names open the catalog. On a phone each slide is rendered as HTML with the same words and links, since the graphic is too small to read there.',
         })}
       </p>
       <p className={cm.cn(cm.sp('pt', 4), cm.textMuted)}>
         {t('about.sync', undefined, {
           defaultValue:
-            'Every build of this site regenerates the SVG, and the README copies are checked against the deployed files, so the two can never drift apart.',
+            'Everything the graphic says lives in one content file that both the SVG generator and the slides read. The site is a molecule.dev static project, built and deployed from its workspace (the badge in the corner points there); every deploy regenerates the SVGs, and the copies in the molecule repository are synced from this site and checked, so the README and the slides cannot drift apart.',
         })}
       </p>
       <ul className={cm.sp('pt', 6)} data-mol-id="about-links">
