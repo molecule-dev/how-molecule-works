@@ -632,6 +632,15 @@ function build(theme, slide = null) {
       row += ch.svg
       xx += ch.w + 8
     })
+    // The rest of the catalog: every other category follows the same pattern.
+    {
+      const more = X.CATEGORIES_MORE.label
+      if (xx + tw(more, 12.5, 600) + 28 > sx + 440) {
+        xx = sx
+        yy += 40
+      }
+      row += chip(xx, yy, more, { size: 12.5, color: C.link, href: X.CATEGORIES_MORE.href }).svg
+    }
     wrap(X.FRAMEWORKS_NOTE, 440, 14).forEach((l, i) => {
       row += txt(sx, yy + 62 + i * 22, l, { size: 14, color: C.gray }).svg
     })
@@ -741,7 +750,7 @@ function build(theme, slide = null) {
     const chh = 240
     cards.forEach(([num, title, body], i) => {
       const x = 60 + i * (cw + 16)
-      const y = 200
+      const y = 176
       const k = show(s + 0.3 + i * 0.35, s + SCENE, {
         from: 'translateY(14px)',
         fadeIn: 0.45,
@@ -760,7 +769,7 @@ function build(theme, slide = null) {
       scene5 += `</g>`
     })
     const platK = show(s + 2.2, s + SCENE, { fadeOut: 0.3 })
-    const py = 458
+    const py = 448
     scene5 += `<g ${A(platK)}>${eyebrow(60, py, X.PLATFORMS_LABEL)}`
     const plats = X.PLATFORMS.map((pl) => [pl.name, pl.sub])
     plats.forEach(([t, sub], i) => {

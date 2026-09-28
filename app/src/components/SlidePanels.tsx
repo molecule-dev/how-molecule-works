@@ -224,6 +224,9 @@ function Bonds() {
             {k.name}
           </Chip>
         ))}
+        <Chip href={c.categoriesMore.href} plain step={5 + c.categories.length}>
+          {c.categoriesMore.label}
+        </Chip>
       </div>
       <p className="hmw-note" data-step style={step(17)}>
         {c.frameworksNote}

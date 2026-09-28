@@ -32,7 +32,7 @@
     {
       "id": "outcomes",
       "label": "Outcomes",
-      "title": "Faster, cheaper, higher-quality apps for web, mobile and API that stay easy to change.",
+      "title": "Faster, cheaper, higher-quality apps for web, mobile and API that stay easy to update and scale.",
       "links": []
     }
   ],
@@ -192,6 +192,10 @@
       "href": "https://www.molecule.dev/packages#q=category%3Alogger"
     }
   ],
+  "categoriesMore": {
+    "label": "all 120+ categories →",
+    "href": "https://www.molecule.dev/packages"
+  },
   "frameworksNote": "Frameworks and platforms swap the same way.",
   "tiles": [
     {

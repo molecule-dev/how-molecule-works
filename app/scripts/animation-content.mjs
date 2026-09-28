@@ -45,7 +45,8 @@ export const SCENES = [
   {
     id: 'outcomes',
     label: 'Outcomes',
-    title: 'Faster, cheaper, higher-quality apps for web, mobile and API that stay easy to change.',
+    title:
+      'Faster, cheaper, higher-quality apps for web, mobile and API that stay easy to update and scale.',
     links: [],
   },
 ]
@@ -137,6 +138,12 @@ export const CATEGORIES = [
   'i18n',
   'logger',
 ].map((c) => ({ name: c, href: CAT(c) }))
+/**
+ * The last chip of the category row: the rest of the catalog. A floor, not a
+ * count — 122 categories follow the core-plus-bonds pattern on 2026-09-28, and
+ * the number only grows.
+ */
+export const CATEGORIES_MORE = { label: 'all 120+ categories →', href: `${SITE}/packages` }
 export const FRAMEWORKS_NOTE = 'Frameworks and platforms swap the same way.'
 
 // ---------------------------------------------------------------- scene 3
@@ -286,6 +293,7 @@ export const CONTENT = {
   dbBonds: DB_BONDS,
   categoriesLabel: CATEGORIES_LABEL,
   categories: CATEGORIES,
+  categoriesMore: CATEGORIES_MORE,
   frameworksNote: FRAMEWORKS_NOTE,
   tiles: TILES,
   tilesNote: TILES_NOTE,
