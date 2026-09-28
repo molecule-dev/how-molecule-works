@@ -178,8 +178,10 @@ export const TILES = [
     'Every project ships an AGENTS.md that teaches any coding agent its conventions.',
   ],
 ].map(([label, info], i) => {
-  // The catalog section each tile opens — the same category ids the landing page links.
-  const cats = [
+  // Where each tile opens: a catalog category (the same ids the landing page
+  // links), or a page for the two that are not a category of packages —
+  // accessibility lives in the UI kit, AGENTS.md is documented in the README.
+  const links = [
     'auth',
     'payments',
     'database',
@@ -194,11 +196,11 @@ export const TILES = [
     'feature-flags',
     'testing',
     'ci',
-    null,
-    null,
+    'ui',
+    'https://github.com/molecule-dev/molecule#the-molecule-cli-mlcl-and-mcp-server',
   ]
-  const cat = cats[i]
-  return { label, info, href: cat ? `${SITE}/packages#${cat}` : null }
+  const link = links[i]
+  return { label, info, href: link.startsWith('http') ? link : `${SITE}/packages#${link}` }
 })
 export const TILES_NOTE =
   'Docs are generated from source, so an agent wires each package right the first time.'

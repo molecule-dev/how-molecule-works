@@ -266,12 +266,12 @@
     {
       "label": "Accessibility (a11y)",
       "info": "Semantic components, focus handling and contrast built into the UI kit.",
-      "href": null
+      "href": "https://www.molecule.dev/packages#ui"
     },
     {
       "label": "AGENTS.md for AI agents",
       "info": "Every project ships an AGENTS.md that teaches any coding agent its conventions.",
-      "href": null
+      "href": "https://github.com/molecule-dev/molecule#the-molecule-cli-mlcl-and-mcp-server"
     }
   ],
   "tilesNote": "Docs are generated from source, so an agent wires each package right the first time.",
