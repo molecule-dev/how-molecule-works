@@ -511,8 +511,8 @@ a.hmw-chip:hover,a.hmw-chip:focus-visible{border-color:var(--hmw-link);box-shado
 .hmw-loop-dot{position:absolute;left:50%;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--hmw-link);box-shadow:0 0 0 5px color-mix(in srgb,var(--hmw-link) 25%,transparent)}
 @keyframes hmw-spin{to{transform:rotate(360deg)}}
 .hmw-signals{display:grid;gap:8px;margin:0;padding:0;list-style:none}
-.hmw-signals > li{position:relative;display:grid;gap:2px;padding:10px 14px 10px 18px;border:1px solid var(--hmw-border);border-radius:12px;background:var(--hmw-layer);font-size:13.5px}
-.hmw-signals > li::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:2px;background:var(--c)}
+.hmw-signals > li{position:relative;display:grid;gap:2px;padding:10px 14px 10px 26px;border:1px solid var(--hmw-border);border-radius:12px;background:var(--hmw-layer);font-size:13.5px}
+.hmw-signals > li::before{content:'';position:absolute;left:12px;top:12px;bottom:12px;width:4px;border-radius:2px;background:var(--c)}
 .hmw-arrow-down{display:block;width:14px;height:22px;margin:10px auto;color:var(--hmw-gray)}
 .hmw-ai{display:grid;gap:5px;padding:14px 16px;border:1.5px solid var(--hmw-primary);border-radius:12px;background:var(--hmw-layer)}
 .hmw-ai .hmw-lbl{margin:0}

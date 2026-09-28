@@ -10,6 +10,8 @@
 
 const SITE = 'https://www.molecule.dev'
 const PKG = (name) => `${SITE}/packages/${name}`
+/** The catalog searched for one category — every search is a link. */
+const CAT = (category) => `${SITE}/packages#q=${encodeURIComponent(`category:${category}`)}`
 
 /** The five scenes: id (deep link), index label, and the one-sentence caption with its links. */
 export const SCENES = [
@@ -73,7 +75,7 @@ export const CATALOG_HREF = `${SITE}/packages`
 export const NODES = [
   {
     name: 'api-ai',
-    info: 'One AI interface with tools and streaming; Anthropic, OpenAI, DeepSeek, Google and more as bonds.',
+    info: 'One AI interface with tools and streaming; the model provider is a swappable bond.',
   },
   {
     name: 'api-flights',
@@ -85,16 +87,16 @@ export const NODES = [
   },
   {
     name: 'api-payments',
-    info: 'Checkout, subscriptions and split bills; Stripe and others as bonds.',
+    info: 'Checkout, subscriptions and split bills; the payment provider is a bond.',
   },
-  { name: 'api-sms', info: 'Texts and rebooking alerts through Twilio and others.' },
+  { name: 'api-sms', info: 'Texts and rebooking alerts; the SMS provider is a bond.' },
   {
     name: 'app-react',
     info: 'The React binding: hooks for auth, i18n, theme and routing over framework-agnostic cores.',
   },
   {
     name: 'app-analytics',
-    info: 'Track once against the interface; wire Mixpanel, PostHog or your own.',
+    info: 'Track once against the interface; the analytics provider is a bond.',
   },
   { name: 'app-react-native', info: 'The same app on iOS and Android, with native device bonds.' },
 ].map((n) => ({ ...n, href: PKG(n.name) }))
@@ -132,7 +134,7 @@ export const CATEGORIES = [
   'sms',
   'i18n',
   'logger',
-].map((c) => ({ name: c, href: `${SITE}/packages#${c}` }))
+].map((c) => ({ name: c, href: CAT(c) }))
 export const FRAMEWORKS_NOTE = 'Frameworks and platforms swap the same way.'
 
 // ---------------------------------------------------------------- scene 3
@@ -143,17 +145,17 @@ export const TILES = [
   ],
   [
     'Payments & billing',
-    'Checkout, subscriptions and invoices — @molecule/api-payments, with Stripe as a bond.',
+    'Checkout, subscriptions and invoices — @molecule/api-payments, with the provider as a bond.',
   ],
   [
     'Database & migrations',
-    'A typed data store with migrations; PostgreSQL, MySQL, SQLite or D1 behind one interface.',
+    'A typed data store with migrations; the database engine is a bond behind one interface.',
   ],
   [
     'i18n · dozens of languages',
     'Every UI string goes through t(); companion locale packages ship dozens of languages.',
   ],
-  ['Analytics', 'One tracking interface on both ends; Mixpanel, PostHog or your own provider.'],
+  ['Analytics', 'One tracking interface on both ends; the provider is a bond.'],
   ['Logging & monitoring', 'Structured logging, health checks and uptime probes.'],
   [
     'Error tracking',
@@ -162,13 +164,16 @@ export const TILES = [
   ['Realtime', 'Live updates over WebSockets or server-sent events behind one interface.'],
   ['Uploads & media', 'File uploads to S3-compatible storage or disk, with image handling.'],
   ['Push notifications', 'Web push and mobile push through one bond.'],
-  ['Search', 'Full-text search; Meilisearch and others as bonds.'],
+  ['Search', 'Full-text search; the search engine is a bond.'],
   ['Feature flags', 'Flags and gradual rollouts, evaluated on both ends.'],
   [
     'Tests: unit, E2E',
     'Unit, integration and Playwright end-to-end tests are scaffolded with the app.',
   ],
-  ['CI/CD & deploys', 'GitHub or GitLab workflows, and one-click deploys from molecule.dev.'],
+  [
+    'CI/CD & deploys',
+    'CI workflows for the major git hosts, and one-click deploys from molecule.dev.',
+  ],
   [
     'Accessibility (a11y)',
     'Semantic components, focus handling and contrast built into the UI kit.',
@@ -200,7 +205,7 @@ export const TILES = [
     'https://github.com/molecule-dev/molecule#the-molecule-cli-mlcl-and-mcp-server',
   ]
   const link = links[i]
-  return { label, info, href: link.startsWith('http') ? link : `${SITE}/packages#${link}` }
+  return { label, info, href: link.startsWith('http') ? link : CAT(link) }
 })
 export const TILES_NOTE =
   'Docs are generated from source, so an agent wires each package right the first time.'
@@ -226,7 +231,7 @@ export const AI = {
   href: SITE,
 }
 export const LOOP_RESULT = 'next release: sign-ups up, export errors gone — measured, not guessed'
-export const LOOP_NOTE = 'Swap Mixpanel for PostHog; the instrumentation stays.'
+export const LOOP_NOTE = 'Swap the analytics provider; the instrumentation stays.'
 
 // ---------------------------------------------------------------- scene 5
 export const OUTCOMES = [

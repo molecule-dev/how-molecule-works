@@ -65,7 +65,7 @@
   "nodes": [
     {
       "name": "api-ai",
-      "info": "One AI interface with tools and streaming; Anthropic, OpenAI, DeepSeek, Google and more as bonds.",
+      "info": "One AI interface with tools and streaming; the model provider is a swappable bond.",
       "href": "https://www.molecule.dev/packages/api-ai"
     },
     {
@@ -80,12 +80,12 @@
     },
     {
       "name": "api-payments",
-      "info": "Checkout, subscriptions and split bills; Stripe and others as bonds.",
+      "info": "Checkout, subscriptions and split bills; the payment provider is a bond.",
       "href": "https://www.molecule.dev/packages/api-payments"
     },
     {
       "name": "api-sms",
-      "info": "Texts and rebooking alerts through Twilio and others.",
+      "info": "Texts and rebooking alerts; the SMS provider is a bond.",
       "href": "https://www.molecule.dev/packages/api-sms"
     },
     {
@@ -95,7 +95,7 @@
     },
     {
       "name": "app-analytics",
-      "info": "Track once against the interface; wire Mixpanel, PostHog or your own.",
+      "info": "Track once against the interface; the analytics provider is a bond.",
       "href": "https://www.molecule.dev/packages/app-analytics"
     },
     {
@@ -144,51 +144,51 @@
   "categories": [
     {
       "name": "auth",
-      "href": "https://www.molecule.dev/packages#auth"
+      "href": "https://www.molecule.dev/packages#q=category%3Aauth"
     },
     {
       "name": "payments",
-      "href": "https://www.molecule.dev/packages#payments"
+      "href": "https://www.molecule.dev/packages#q=category%3Apayments"
     },
     {
       "name": "emails",
-      "href": "https://www.molecule.dev/packages#emails"
+      "href": "https://www.molecule.dev/packages#q=category%3Aemails"
     },
     {
       "name": "ai",
-      "href": "https://www.molecule.dev/packages#ai"
+      "href": "https://www.molecule.dev/packages#q=category%3Aai"
     },
     {
       "name": "analytics",
-      "href": "https://www.molecule.dev/packages#analytics"
+      "href": "https://www.molecule.dev/packages#q=category%3Aanalytics"
     },
     {
       "name": "realtime",
-      "href": "https://www.molecule.dev/packages#realtime"
+      "href": "https://www.molecule.dev/packages#q=category%3Arealtime"
     },
     {
       "name": "file-upload",
-      "href": "https://www.molecule.dev/packages#file-upload"
+      "href": "https://www.molecule.dev/packages#q=category%3Afile-upload"
     },
     {
       "name": "search",
-      "href": "https://www.molecule.dev/packages#search"
+      "href": "https://www.molecule.dev/packages#q=category%3Asearch"
     },
     {
       "name": "queue",
-      "href": "https://www.molecule.dev/packages#queue"
+      "href": "https://www.molecule.dev/packages#q=category%3Aqueue"
     },
     {
       "name": "sms",
-      "href": "https://www.molecule.dev/packages#sms"
+      "href": "https://www.molecule.dev/packages#q=category%3Asms"
     },
     {
       "name": "i18n",
-      "href": "https://www.molecule.dev/packages#i18n"
+      "href": "https://www.molecule.dev/packages#q=category%3Ai18n"
     },
     {
       "name": "logger",
-      "href": "https://www.molecule.dev/packages#logger"
+      "href": "https://www.molecule.dev/packages#q=category%3Alogger"
     }
   ],
   "frameworksNote": "Frameworks and platforms swap the same way.",
@@ -196,77 +196,77 @@
     {
       "label": "Auth & OAuth",
       "info": "Sessions, passwords, two-factor and OAuth sign-in — @molecule/api-auth and app-auth.",
-      "href": "https://www.molecule.dev/packages#auth"
+      "href": "https://www.molecule.dev/packages#q=category%3Aauth"
     },
     {
       "label": "Payments & billing",
-      "info": "Checkout, subscriptions and invoices — @molecule/api-payments, with Stripe as a bond.",
-      "href": "https://www.molecule.dev/packages#payments"
+      "info": "Checkout, subscriptions and invoices — @molecule/api-payments, with the provider as a bond.",
+      "href": "https://www.molecule.dev/packages#q=category%3Apayments"
     },
     {
       "label": "Database & migrations",
-      "info": "A typed data store with migrations; PostgreSQL, MySQL, SQLite or D1 behind one interface.",
-      "href": "https://www.molecule.dev/packages#database"
+      "info": "A typed data store with migrations; the database engine is a bond behind one interface.",
+      "href": "https://www.molecule.dev/packages#q=category%3Adatabase"
     },
     {
       "label": "i18n · dozens of languages",
       "info": "Every UI string goes through t(); companion locale packages ship dozens of languages.",
-      "href": "https://www.molecule.dev/packages#i18n"
+      "href": "https://www.molecule.dev/packages#q=category%3Ai18n"
     },
     {
       "label": "Analytics",
-      "info": "One tracking interface on both ends; Mixpanel, PostHog or your own provider.",
-      "href": "https://www.molecule.dev/packages#analytics"
+      "info": "One tracking interface on both ends; the provider is a bond.",
+      "href": "https://www.molecule.dev/packages#q=category%3Aanalytics"
     },
     {
       "label": "Logging & monitoring",
       "info": "Structured logging, health checks and uptime probes.",
-      "href": "https://www.molecule.dev/packages#monitoring"
+      "href": "https://www.molecule.dev/packages#q=category%3Amonitoring"
     },
     {
       "label": "Error tracking",
       "info": "Exceptions captured with context on API and app; the tracker is a swappable bond.",
-      "href": "https://www.molecule.dev/packages#error-tracking"
+      "href": "https://www.molecule.dev/packages#q=category%3Aerror-tracking"
     },
     {
       "label": "Realtime",
       "info": "Live updates over WebSockets or server-sent events behind one interface.",
-      "href": "https://www.molecule.dev/packages#realtime"
+      "href": "https://www.molecule.dev/packages#q=category%3Arealtime"
     },
     {
       "label": "Uploads & media",
       "info": "File uploads to S3-compatible storage or disk, with image handling.",
-      "href": "https://www.molecule.dev/packages#file-upload"
+      "href": "https://www.molecule.dev/packages#q=category%3Afile-upload"
     },
     {
       "label": "Push notifications",
       "info": "Web push and mobile push through one bond.",
-      "href": "https://www.molecule.dev/packages#push-notifications"
+      "href": "https://www.molecule.dev/packages#q=category%3Apush-notifications"
     },
     {
       "label": "Search",
-      "info": "Full-text search; Meilisearch and others as bonds.",
-      "href": "https://www.molecule.dev/packages#search"
+      "info": "Full-text search; the search engine is a bond.",
+      "href": "https://www.molecule.dev/packages#q=category%3Asearch"
     },
     {
       "label": "Feature flags",
       "info": "Flags and gradual rollouts, evaluated on both ends.",
-      "href": "https://www.molecule.dev/packages#feature-flags"
+      "href": "https://www.molecule.dev/packages#q=category%3Afeature-flags"
     },
     {
       "label": "Tests: unit, E2E",
       "info": "Unit, integration and Playwright end-to-end tests are scaffolded with the app.",
-      "href": "https://www.molecule.dev/packages#testing"
+      "href": "https://www.molecule.dev/packages#q=category%3Atesting"
     },
     {
       "label": "CI/CD & deploys",
-      "info": "GitHub or GitLab workflows, and one-click deploys from molecule.dev.",
-      "href": "https://www.molecule.dev/packages#ci"
+      "info": "CI workflows for the major git hosts, and one-click deploys from molecule.dev.",
+      "href": "https://www.molecule.dev/packages#q=category%3Aci"
     },
     {
       "label": "Accessibility (a11y)",
       "info": "Semantic components, focus handling and contrast built into the UI kit.",
-      "href": "https://www.molecule.dev/packages#ui"
+      "href": "https://www.molecule.dev/packages#q=category%3Aui"
     },
     {
       "label": "AGENTS.md for AI agents",
@@ -307,7 +307,7 @@
     "href": "https://www.molecule.dev"
   },
   "loopResult": "next release: sign-ups up, export errors gone — measured, not guessed",
-  "loopNote": "Swap Mixpanel for PostHog; the instrumentation stays.",
+  "loopNote": "Swap the analytics provider; the instrumentation stays.",
   "outcomes": [
     {
       "num": "01",
