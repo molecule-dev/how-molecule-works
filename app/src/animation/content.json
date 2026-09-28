@@ -270,8 +270,8 @@
       "href": "https://www.molecule.dev/packages#q=category%3Aui"
     },
     {
-      "label": "AGENTS.md for AI agents",
-      "info": "Every project ships an AGENTS.md that teaches any coding agent its conventions.",
+      "label": "Skills for AI agents",
+      "info": "Every project ships skills that teach any coding agent its conventions and packages.",
       "href": "https://github.com/molecule-dev/molecule#the-molecule-cli-mlcl-and-mcp-server"
     }
   ],

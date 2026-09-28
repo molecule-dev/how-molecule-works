@@ -181,13 +181,13 @@ export const TILES = [
     'Semantic components, focus handling and contrast built into the UI kit.',
   ],
   [
-    'AGENTS.md for AI agents',
-    'Every project ships an AGENTS.md that teaches any coding agent its conventions.',
+    'Skills for AI agents',
+    'Every project ships skills that teach any coding agent its conventions and packages.',
   ],
 ].map(([label, info], i) => {
   // Where each tile opens: a catalog category (the same ids the landing page
   // links), or a page for the two that are not a category of packages —
-  // accessibility lives in the UI kit, AGENTS.md is documented in the README.
+  // accessibility lives in the UI kit, the agent skills are documented in the README.
   const links = [
     'auth',
     'payments',
