@@ -236,23 +236,41 @@ export function Slideshow() {
       if (nav) go(index + (nav === 'next' ? 1 : -1))
       else if (scene !== undefined) go(Number(scene))
     }
-    const onMove = (e: PointerEvent) => {
-      const target = (e.target as Element).closest('[data-info]') as HTMLElement | null
+    // The pointer's last position, so a chip that CHANGES under a still
+    // pointer (the bond slot cycles four of them) still updates the tooltip.
+    let lastX = -1
+    let lastY = -1
+    const place = (clientX: number, clientY: number, hovered: Element | null) => {
+      const target = hovered?.closest('[data-info]') as HTMLElement | null
       if (!target) {
         setTip(null)
         return
       }
       const box = frame.getBoundingClientRect()
-      const x = Math.min(Math.max(e.clientX - box.left, 0), box.width)
-      const y = e.clientY - box.top
-      setTip({ text: target.dataset.info ?? '', x, y })
+      const x = Math.min(Math.max(clientX - box.left, 0), box.width)
+      const y = clientY - box.top
+      const text = target.dataset.info ?? ''
+      setTip((t) => (t && t.text === text && t.x === x && t.y === y ? t : { text, x, y }))
     }
-    const onLeave = () => setTip(null)
+    const onMove = (e: PointerEvent) => {
+      lastX = e.clientX
+      lastY = e.clientY
+      place(e.clientX, e.clientY, e.target as Element)
+    }
+    const onLeave = () => {
+      lastX = -1
+      setTip(null)
+    }
+    const recheck = window.setInterval(() => {
+      if (lastX < 0) return
+      place(lastX, lastY, document.elementFromPoint(lastX, lastY))
+    }, 250)
     // On the frame, not the stage: the HTML index row sits outside the stage.
     frame.addEventListener('click', onClick)
     frame.addEventListener('pointermove', onMove)
     frame.addEventListener('pointerleave', onLeave)
     return () => {
+      window.clearInterval(recheck)
       frame.removeEventListener('click', onClick)
       frame.removeEventListener('pointermove', onMove)
       frame.removeEventListener('pointerleave', onLeave)

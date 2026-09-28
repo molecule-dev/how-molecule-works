@@ -474,7 +474,7 @@ a.hmw-chip:hover,a.hmw-chip:focus-visible{border-color:var(--hmw-link);box-shado
 .hmw-core{display:grid;gap:5px;padding:14px 16px;border:1.5px solid var(--hmw-primary);border-radius:12px;background:var(--hmw-layer)}
 .hmw-core .hmw-lbl{margin:0}
 .hmw-core-name{font-size:15px;color:var(--hmw-strong)}
-.hmw-bond-link{display:block;width:36px;height:18px;margin:0 auto;border:1.5px dashed var(--hmw-primary);border-top:none}
+.hmw-bond-link{display:block;width:0;height:18px;margin:0 auto;border-left:2px dashed var(--hmw-primary)}
 .hmw-slot{position:relative;height:56px;margin:0 0 14px;border:1px dashed var(--hmw-border);border-radius:12px}
 .hmw-slot-item{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px 0 10px}
 .hmw-slot-item .hmw-chip{border-color:var(--c);min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
