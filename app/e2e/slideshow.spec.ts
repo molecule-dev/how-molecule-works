@@ -147,10 +147,6 @@ test('the looping SVGs are served for embedding', async ({ page }) => {
     expect(res.headers()['content-type']).toContain('image/svg+xml')
     expect(await res.text()).toContain('How Molecule works')
   }
-  await page.goto('/about/')
-  await expect(page.locator('[data-mol-id="about-embed"]')).toContainText(
-    'how-molecule-works-dark.svg',
-  )
 })
 
 test.describe('under a dark OS preference', () => {

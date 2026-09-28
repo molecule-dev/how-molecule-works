@@ -19,7 +19,7 @@ import { ROUTER_BASENAME, withBase } from './site.js'
  */
 
 /** Every route the build writes as an HTML page. */
-export const STATIC_PATHS: string[] = ['/', '/about/']
+export const STATIC_PATHS: string[] = ['/']
 
 /** One rendered page, as the prerender writes it into the shell. */
 export interface RenderedPage {

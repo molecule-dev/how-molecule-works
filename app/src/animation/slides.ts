@@ -65,23 +65,3 @@ export function prepareSlideSvg(svg: string): string {
       '<svg$1 style="width:100%;height:auto;display:block"',
     )
 }
-
-/**
- * The README markdown that embeds the looping graphic and links back here —
- * what the "copy embed" button puts on the clipboard.
- *
- * @param origin - This site's origin (`https://…`), no trailing slash.
- * @returns A `<picture>` block GitHub renders theme-aware, plus the link.
- */
-export function embedMarkdown(origin: string): string {
-  const alt = 'How Molecule works'
-  return [
-    `<div align="center">`,
-    `  <a href="${origin}"><picture>`,
-    `    <source media="(prefers-color-scheme: dark)" srcset="${origin}/how-molecule-works-dark.svg">`,
-    `    <img src="${origin}/how-molecule-works-light.svg" alt="${alt}" width="100%">`,
-    `  </picture></a>`,
-    `</div>`,
-    `<div align="right"><small><sup><a href="${origin}">Interactive</a></sup></small></div>`,
-  ].join('\n')
-}

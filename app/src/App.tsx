@@ -5,7 +5,6 @@ import { getProvider as getStorageProvider } from '@molecule/app-storage'
 
 import { i18nProvider, themeProvider } from './bonds/index.js'
 import { SiteLayout } from './components/SiteLayout.js'
-import { About } from './pages/About.js'
 import { Home } from './pages/Home.js'
 import { NotFound } from './pages/NotFound.js'
 
@@ -22,7 +21,6 @@ export function App() {
       <Routes>
         <Route element={<SiteLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

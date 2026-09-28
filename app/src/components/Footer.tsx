@@ -1,22 +1,31 @@
-import { Link, useLocation } from 'react-router'
-
 import { useTranslation } from '@molecule/app-react'
 import { getClassMap } from '@molecule/app-ui'
 
-import { MOLECULE_REPO_URL } from '../branding.js'
+import { MOLECULE_REPO_URL, SOURCE_URL, WORKSPACE_URL } from '../branding.js'
 import { ThemeToggle } from './ThemeToggle.js'
 
 /**
- * The one line of site chrome: copyright, the repo, About (or the way back
- * from it) and the theme toggle. molecule.dev itself is linked from the
- * artwork, so it is not repeated here.
+ * The one line of site chrome: copyright, the packages on GitHub, this site's
+ * source and its public molecule.dev workspace, and the theme toggle.
+ * molecule.dev itself is linked from the artwork, so it is not repeated here.
  */
 export function Footer() {
   const cm = getClassMap()
   const { t } = useTranslation()
-  const { pathname } = useLocation()
-  const onAbout = pathname.startsWith('/about')
   const year = new Date().getFullYear()
+  const links = [
+    { id: 'repo', href: MOLECULE_REPO_URL, label: 'GitHub' },
+    {
+      id: 'source',
+      href: SOURCE_URL,
+      label: t('footer.source', undefined, { defaultValue: 'Source' }),
+    },
+    {
+      id: 'workspace',
+      href: WORKSPACE_URL,
+      label: t('footer.workspace', undefined, { defaultValue: 'Workspace' }),
+    },
+  ].filter((l) => l.href)
   return (
     <footer className={cm.footerBar} data-mol-id="site-footer">
       <div
@@ -32,24 +41,18 @@ export function Footer() {
           className={cm.flex({ align: 'center', wrap: 'wrap', gap: 4 })}
           aria-label={t('footer.nav', undefined, { defaultValue: 'Links' })}
         >
-          <a
-            className={cm.link}
-            href={MOLECULE_REPO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-mol-id="footer-repo"
-          >
-            GitHub
-          </a>
-          {onAbout ? (
-            <Link className={cm.link} to="/" data-mol-id="footer-home">
-              {t('footer.slides', undefined, { defaultValue: 'Slides' })}
-            </Link>
-          ) : (
-            <Link className={cm.link} to="/about/" data-mol-id="footer-about">
-              {t('footer.aboutSite', undefined, { defaultValue: 'About this site' })}
-            </Link>
-          )}
+          {links.map((l) => (
+            <a
+              key={l.id}
+              className={cm.link}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-mol-id={`footer-${l.id}`}
+            >
+              {l.label}
+            </a>
+          ))}
           <ThemeToggle />
         </nav>
       </div>
