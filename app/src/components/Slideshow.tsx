@@ -344,7 +344,14 @@ export function Slideshow() {
       aria-label={t('slides.label', undefined, {
         defaultValue: 'How Molecule works, in five slides',
       })}
-      style={{ maxWidth: 1200, margin: '0 auto' }}
+      // As large as the page allows at the graphic's 12:7 shape: the full
+      // width (the shell's padding is the gutter), or the full viewport height
+      // less the page's 24px top and bottom padding, whichever binds first —
+      // capped for very large screens.
+      style={{
+        width: 'min(100%, calc((100svh - 48px) * 12 / 7), 1680px)',
+        margin: '0 auto',
+      }}
     >
       <style>{STAGE_CSS + PANEL_CSS}</style>
       <div

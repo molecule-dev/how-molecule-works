@@ -13,8 +13,15 @@ export interface Scene {
   title: string
 }
 
-/** How long a slide stays before autoplay moves on: the graphic's own scene length. */
-export const DWELL_MS: number = timeline.sceneSeconds * 1000
+/**
+ * How long a finished slide stays still before autoplay moves on. The scene
+ * builds in over its own length; this is reading time after the last piece
+ * has landed.
+ */
+export const READ_HOLD_MS = 3000
+
+/** How long a slide stays before autoplay moves on: the scene's build, then the reading hold. */
+export const DWELL_MS: number = timeline.sceneSeconds * 1000 + READ_HOLD_MS
 
 /** The scene list — the generator's order, ids and titles. */
 export const SCENES: Scene[] = timeline.scenes
