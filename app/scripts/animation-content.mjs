@@ -227,19 +227,19 @@ export const LOOP_STEPS = [
   'improves · ships · measures',
 ]
 export const LOOP_CENTER = ['every release', 'a little better']
-export const SIGNALS_LABEL = 'from the running app'
+export const SIGNALS_LABEL = 'from your running app'
 export const SIGNALS = [
-  { kind: 'analytics', text: 'Sign-ups stall on the second step of onboarding' },
-  { kind: 'error tracking', text: 'Invoice export throws for 14 users this week' },
-  { kind: 'feedback', text: '“Can I get this as CSV?” — asked nine times' },
+  { kind: 'analytics', text: 'Where your users drop off, and which features they use' },
+  { kind: 'error tracking', text: 'Every error your users hit, with its stack trace' },
+  { kind: 'feedback', text: 'What your users ask for, in their own words' },
 ]
 export const AI = {
   label: 'the AI, in your workspace',
-  headline: 'Shortens onboarding to one step · fixes the export · adds CSV',
+  headline: 'Turns them into fixes and improvements to your app',
   sub: 'Type-checked, tested and deployed — you approve, or let it run.',
   href: SITE,
 }
-export const LOOP_RESULT = 'next release: sign-ups up, export errors gone — measured, not guessed'
+export const LOOP_RESULT = 'each release measured against the last, not guessed'
 export const LOOP_NOTE = 'Swap the analytics provider; the instrumentation stays.'
 
 // ---------------------------------------------------------------- scene 5

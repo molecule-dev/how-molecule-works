@@ -290,28 +290,28 @@
     "every release",
     "a little better"
   ],
-  "signalsLabel": "from the running app",
+  "signalsLabel": "from your running app",
   "signals": [
     {
       "kind": "analytics",
-      "text": "Sign-ups stall on the second step of onboarding"
+      "text": "Where your users drop off, and which features they use"
     },
     {
       "kind": "error tracking",
-      "text": "Invoice export throws for 14 users this week"
+      "text": "Every error your users hit, with its stack trace"
     },
     {
       "kind": "feedback",
-      "text": "“Can I get this as CSV?” — asked nine times"
+      "text": "What your users ask for, in their own words"
     }
   ],
   "ai": {
     "label": "the AI, in your workspace",
-    "headline": "Shortens onboarding to one step · fixes the export · adds CSV",
+    "headline": "Turns them into fixes and improvements to your app",
     "sub": "Type-checked, tested and deployed — you approve, or let it run.",
     "href": "https://www.molecule.dev"
   },
-  "loopResult": "next release: sign-ups up, export errors gone — measured, not guessed",
+  "loopResult": "each release measured against the last, not guessed",
   "loopNote": "Swap the analytics provider; the instrumentation stays.",
   "outcomes": [
     {
