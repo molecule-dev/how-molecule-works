@@ -18,6 +18,9 @@
   "devDependencies": {
     "husky": "9.1.7"
   },
+  "overrides": {
+    "postcss-selector-parser": "7.1.6"
+  },
   "keywords": [
     "molecule",
     "molecule.dev"
